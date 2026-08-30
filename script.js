@@ -1,10 +1,14 @@
 /**
  * OM ONLINE MART - CLIENT SIDE APPLICATION SCRIPT
- * Handles vCard generation, Native Web Share, QR Code rendering, and Interactive Modals.
+ * Features:
+ * 1. Smart Mobile Deep-Linking (Direct Native App Redirection with Web Fallback for WhatsApp, Instagram, Telegram, YouTube)
+ * 2. Dynamic vCard (.vcf) Generation & One-Click Contact Download
+ * 3. Dynamic High-Quality QR Code Generator & PNG Save
+ * 4. Web Share API with Sleek Fallback Share Modal
+ * 5. Toast Notifications & Clipboard Utilities
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Elements
   const currentUrl = window.location.href.includes('http') ? window.location.href : 'https://omonlinemart.in';
   const qrCanvas = document.getElementById('qr-code-canvas');
   const qrModal = document.getElementById('qr-modal');
@@ -13,11 +17,51 @@ document.addEventListener('DOMContentLoaded', () => {
   const toastMsg = document.getElementById('toast-msg');
   const toastIcon = document.getElementById('toast-icon');
 
-  // Set Current Year in Footer
+  // Dynamic Year in Footer
   const yearSpan = document.getElementById('year-span');
   if (yearSpan) {
     yearSpan.textContent = new Date().getFullYear();
   }
+
+  // =========================================================================
+  // DEVICE DETECTION & SMART DEEP-LINKING (APP INTENT HANDLER)
+  // =========================================================================
+  function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+           (window.innerWidth <= 768 && ('ontouchstart' in window || navigator.maxTouchPoints > 0));
+  }
+
+  function setupAppDeepLinks() {
+    const appLinks = document.querySelectorAll('.app-intent-link');
+
+    appLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        const appUrl = link.getAttribute('data-app-url');
+        const webUrl = link.href;
+
+        // If on mobile and a native app scheme is specified
+        if (isMobileDevice() && appUrl) {
+          e.preventDefault();
+          
+          const clickTime = Date.now();
+          
+          // Try to launch native app directly
+          window.location.href = appUrl;
+
+          // If the app is not installed, user remains on page -> fallback to web url
+          setTimeout(() => {
+            // Check if user is still focused on page (did not switch to app)
+            if (Date.now() - clickTime < 2200 && !document.hidden) {
+              window.open(webUrl, '_blank');
+            }
+          }, 1400);
+        }
+        // On desktop, the standard link href (web URL) opens normally in new tab
+      });
+    });
+  }
+
+  setupAppDeepLinks();
 
   // =========================================================================
   // TOAST NOTIFICATION UTILITY
@@ -101,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 
-    showToast('સંપર્ક ફાઈલ ડાઉનલોડ થઈ! / Contact saved!');
+    showToast('સંપર્ક સેવ ફાઈલ ડાઉનલોડ થઈ! / Contact saved!');
   }
 
   const btnSaveContact = document.getElementById('btn-save-contact');
@@ -187,11 +231,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function handleShare() {
     const shareData = {
       title: 'OM Online Mart - Meesho Selling & Dropshipping Service',
-      text: 'Meesho પર Selling શરૂ કરો — Account, Product Listing અને Order Dispatchની સંપૂર્ણ Service અમારી તરફથી.',
+      text: 'Meesho પર Selling શરૂ કરો - Account, Product Listing અને Order Dispatchની સંપૂર્ણ Service અમારી તરફથી.',
       url: currentUrl
     };
 
-    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+    if (isMobileDevice() && navigator.share && navigator.canShare && navigator.canShare(shareData)) {
       navigator.share(shareData).catch(() => {
         // User cancelled or failed -> fallback to modal
       });
