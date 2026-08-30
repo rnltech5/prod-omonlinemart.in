@@ -10,7 +10,22 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  const currentUrl = window.location.href.includes('http') ? window.location.href : 'https://omonlinemart.in';
+  // =========================================================================
+  // 🔗 APP CONFIGURATION & LINKS (EDIT YOUR LINKS HERE)
+  // =========================================================================
+  const APP_CONFIG = {
+    // 📄 Paste your Google Drive PDF Catalog link here:
+    // Example: "https://drive.google.com/file/d/1A2B3C4D5E6F/view?usp=sharing"
+    CATALOG_DRIVE_URL: "https://drive.google.com/",
+
+    // 🌐 Website base URL
+    WEBSITE_URL: "https://omonlinemart.in",
+
+    // 📞 Primary Contact Number
+    CONTACT_PHONE: "+917304429236"
+  };
+
+  const currentUrl = window.location.href.includes('http') ? window.location.href : APP_CONFIG.WEBSITE_URL;
   const qrCanvas = document.getElementById('qr-code-canvas');
   const qrModal = document.getElementById('qr-modal');
   const shareModal = document.getElementById('share-modal');
@@ -19,15 +34,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const toastIcon = document.getElementById('toast-icon');
   const stickyTopNav = document.getElementById('sticky-top-nav');
   const stickyBrandLogoBtn = document.getElementById('sticky-brand-logo-btn');
+  const headerCatalogBtn = document.getElementById('header-catalog-btn');
+
+  // Dynamically set Catalog Google Drive URL from APP_CONFIG
+  if (headerCatalogBtn && APP_CONFIG.CATALOG_DRIVE_URL) {
+    headerCatalogBtn.href = APP_CONFIG.CATALOG_DRIVE_URL;
+  }
 
   // =========================================================================
   // BILINGUAL TRANSLATIONS DICTIONARY (GUJARATI & ENGLISH)
   // =========================================================================
   const translations = {
     gu: {
-      verified_badge: "Verified Business Partner",
       brand_category: "Meesho Selling & Dropshipping Service",
-      location: "Gujarat",
+      catalog_btn: "View All Catalog",
       feat_products: "2000+ Products",
       feat_dispatch: "Fast Dispatch",
       feat_profit: "High Profit",
@@ -92,9 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
       lang_changed: "ભાષા બદલાઈ ગઈ: ગુજરાતી"
     },
     en: {
-      verified_badge: "Verified Business Partner",
       brand_category: "Meesho Selling & Dropshipping Service",
-      location: "Gujarat",
+      catalog_btn: "View All Catalog",
       feat_products: "2000+ Products",
       feat_dispatch: "Fast Dispatch",
       feat_profit: "High Profit",
