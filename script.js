@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const APP_CONFIG = {
     // 📄 Paste your Google Drive PDF Catalog link here:
     // Example: "https://drive.google.com/file/d/1A2B3C4D5E6F/view?usp=sharing"
-    CATALOG_DRIVE_URL: "https://drive.google.com/",
+    CATALOG_DRIVE_URL: "https://drive.google.com/drive/folders/1MZryYIel2VUDi2lZCdPLwBD6AIZlhYpZ?usp=sharing",
 
     // 🌐 Website base URL
     WEBSITE_URL: "https://omonlinemart.in",
