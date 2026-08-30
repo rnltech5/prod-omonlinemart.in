@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     gu: {
       verified_badge: "Verified Business Partner",
       brand_category: "Meesho Selling & Dropshipping Service",
-      location: "Surat, Gujarat",
+      location: "Gujarat",
       feat_products: "2000+ Products",
       feat_dispatch: "Fast Dispatch",
       feat_profit: "High Profit",
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
     en: {
       verified_badge: "Verified Business Partner",
       brand_category: "Meesho Selling & Dropshipping Service",
-      location: "Surat, Gujarat",
+      location: "Gujarat",
       feat_products: "2000+ Products",
       feat_dispatch: "Fast Dispatch",
       feat_profit: "High Profit",
