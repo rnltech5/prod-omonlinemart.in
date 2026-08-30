@@ -1,11 +1,12 @@
 /**
  * OM ONLINE MART - CLIENT SIDE APPLICATION SCRIPT
  * Features:
- * 1. Smart Mobile Deep-Linking (Direct Native App Redirection with Web Fallback for WhatsApp, Instagram, Telegram, YouTube)
- * 2. Dynamic vCard (.vcf) Generation & One-Click Contact Download
- * 3. Dynamic High-Quality QR Code Generator & PNG Save
- * 4. Web Share API with Sleek Fallback Share Modal
- * 5. Toast Notifications & Clipboard Utilities
+ * 1. Two-Pill Bilingual Language Switcher (Gujarati <-> English) with Persistent Storage
+ * 2. Sticky Top Navbar with Brand Logo & Name that reveals on scroll
+ * 3. Smart Mobile Deep-Linking (Native App Redirection for WhatsApp, Instagram, Telegram, YouTube)
+ * 4. Dynamic vCard (.vcf) Generation & Contact Saving
+ * 5. Dynamic QR Code Generator with PNG Image Download
+ * 6. Web Share API with Fallback Dialog & Toast Notifications
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -16,11 +17,232 @@ document.addEventListener('DOMContentLoaded', () => {
   const toast = document.getElementById('toast');
   const toastMsg = document.getElementById('toast-msg');
   const toastIcon = document.getElementById('toast-icon');
+  const stickyTopNav = document.getElementById('sticky-top-nav');
+  const stickyBrandLogoBtn = document.getElementById('sticky-brand-logo-btn');
 
   // Dynamic Year in Footer
   const yearSpan = document.getElementById('year-span');
   if (yearSpan) {
     yearSpan.textContent = new Date().getFullYear();
+  }
+
+  // =========================================================================
+  // BILINGUAL TRANSLATIONS DICTIONARY (GUJARATI & ENGLISH)
+  // =========================================================================
+  const translations = {
+    gu: {
+      verified_badge: "Verified Business Partner",
+      brand_category: "Meesho Selling & Dropshipping Service",
+      location: "Surat, Gujarat",
+      feat_products: "2000+ Products",
+      feat_dispatch: "Fast Dispatch",
+      feat_profit: "High Profit",
+      spotlight_badge: "Official Service",
+      spotlight_title: "Meesho Selling & Dropshipping Service",
+      spotlight_desc: "Meesho પર Selling શરૂ કરો - Account, Product Listing અને Order Dispatchની સંપૂર્ણ Service અમારી તરફથી.",
+      spotlight_btn: "WhatsApp પર સંપર્ક કરો",
+      connect_title: "ઝડપી સંપર્ક અને સોશિયલ મીડિયા",
+      connect_sub: "Connect With Us • Instant Channels",
+      wa_label: "WhatsApp Chat",
+      wa_sub: "મેસેજ કરો (7304429236)",
+      call_label: "Direct Call",
+      call_sub: "+91 7304429236",
+      insta_label: "Instagram",
+      insta_sub: "@om_online_mart",
+      tg_label: "Telegram Channel",
+      tg_sub: "@onlinemartom",
+      yt_label: "YouTube Channel",
+      yt_sub: "@omonlinemart",
+      vcard_label: "Save Contact",
+      vcard_sub: "ફોનમાં નંબર સેવ કરો",
+      services_title: "અમારી મુખ્ય સેવાઓ અને વિશેષતાઓ",
+      services_sub: "Why Choose OM Online Mart • Complete Selling Support",
+      badge_benefits: "9 Key Benefits",
+      f1_title: "Meesho Seller Account બનાવવાની સુવિધા",
+      f1_desc: "નવું Seller Account સરળતાથી અને ઝડપથી સેટઅપ કરી આપીશું.",
+      f2_title: "2000+ Products ઉપલબ્ધ",
+      f2_desc: "ટ્રેન્ડિંગ અને હાઈ-ડિમાન્ડ પ્રોડક્ટ્સનો વિશાળ સ્ટોક.",
+      f3_title: "Product Listing ઉપલબ્ધ",
+      f3_desc: "પ્રોફેશનલ Title, Description અને Images સાથે લિસ્ટિંગ.",
+      f4_title: "દરેક Productમાં Profit Margin",
+      f4_desc: "તમારા દરેક ઓર્ડર પર બેસ્ટ અને ગેરંટીડ નફો મેળવો.",
+      f5_title: "Order આવ્યા પછી જ Payment",
+      f5_desc: "કોઈ એડવાન્સ ઇન્વેસ્ટમેન્ટ નહીં, ઓર્ડર મળે ત્યારે જ પેમેન્ટ.",
+      f6_title: "માત્ર Wholesale Product Rate + Packing Charge",
+      f6_desc: "તદ્દન વ્યાજબી હોલસેલ રેટ અને પારદર્શક પેકિંગ ચાર્જ.",
+      f7_title: "અમે Product Pack કરીને Dispatch કરીશું",
+      f7_desc: "પેકિંગ, લેબલિંગ અને કુરિયર ડિસ્પેચની તમામ જવાબદારી અમારી.",
+      f8_title: "Return Product સંભાળવાની સુવિધા",
+      f8_desc: "Return Product અમારી પાસે આવશે અને Reusable હોય તો આગળના Orderમાં ઉપયોગ કરીશું.",
+      f9_title: "તમામ કામગીરી Meesho Policy મુજબ",
+      f9_desc: "૧૦૦% સિક્યોર અને Meesho ની તમામ ગાઇડલાઇન્સ મુજબ કામગીરી.",
+      cta_badge: "🎯 Easy E-Commerce",
+      cta_title: "તમારે માત્ર Selling પર ધ્યાન આપવાનું - બાકીનું કામ અમે સંભાળીશું.",
+      cta_desc: "આજે જ તમારો Meesho બિઝનેસ શરૂ કરો અને ઘરે બેઠા સારો નફો કમાઓ.",
+      cta_btn: "WhatsApp પર શરૂ કરો",
+      contact_card_title: "સંપર્ક માહિતી (Contact Information)",
+      lbl_mobile: "મોબાઇલ નંબર (Mobile / WhatsApp)",
+      lbl_email: "ઈમેઈલ (Email Inquiry)",
+      lbl_location: "સ્થળ (Location)",
+      val_location: "Surat, Gujarat, India",
+      lbl_hours: "સર્વિસ સમય (Working Hours)",
+      val_hours: "સોમવાર - શનિવાર: 9:00 AM - 9:00 PM",
+      footer_sub: "Your Trusted Meesho Dropshipping Partner",
+      footer_powered: "Empowering Smart Online Sellers",
+      qr_pill_btn: "QR Code",
+      share_pill_btn: "Share",
+      qr_title: "સ્કેન કરો / Scan QR Code",
+      qr_desc: "તમારા મોબાઈલ કેમેરાથી સ્કેન કરીને OM Online Mart પ્રોફાઈલ સરળતાથી શેર કરો.",
+      qr_copy_btn: "Copy Link",
+      qr_save_btn: "Save QR",
+      share_title: "Share OM Online Mart",
+      toast_copy: "લિંક કોપી થઈ ગઈ! / Link copied!",
+      toast_vcard: "સંપર્ક સેવ ફાઈલ ડાઉનલોડ થઈ! / Contact saved!",
+      toast_qr: "QR Code ડાઉનલોડ થયો! / QR downloaded!",
+      sticky_call: "Call Now",
+      sticky_wa: "WhatsApp",
+      sticky_share: "Share",
+      lang_changed: "ભાષા બદલાઈ ગઈ: ગુજરાતી"
+    },
+    en: {
+      verified_badge: "Verified Business Partner",
+      brand_category: "Meesho Selling & Dropshipping Service",
+      location: "Surat, Gujarat",
+      feat_products: "2000+ Products",
+      feat_dispatch: "Fast Dispatch",
+      feat_profit: "High Profit",
+      spotlight_badge: "Official Service",
+      spotlight_title: "Meesho Selling & Dropshipping Service",
+      spotlight_desc: "Start selling on Meesho — Complete service for Seller Account, Product Listing & Order Dispatch by our expert team.",
+      spotlight_btn: "Contact on WhatsApp",
+      connect_title: "Quick Contact & Social Media",
+      connect_sub: "Connect With Us • Instant Channels",
+      wa_label: "WhatsApp Chat",
+      wa_sub: "Message Us (7304429236)",
+      call_label: "Direct Call",
+      call_sub: "+91 7304429236",
+      insta_label: "Instagram",
+      insta_sub: "@om_online_mart",
+      tg_label: "Telegram Channel",
+      tg_sub: "@onlinemartom",
+      yt_label: "YouTube Channel",
+      yt_sub: "@omonlinemart",
+      vcard_label: "Save Contact",
+      vcard_sub: "Save to Phone Contacts",
+      services_title: "Our Key Services & Highlights",
+      services_sub: "Why Choose OM Online Mart • Complete Selling Support",
+      badge_benefits: "9 Key Benefits",
+      f1_title: "Meesho Seller Account Setup",
+      f1_desc: "Quick, hassle-free creation and verification of your new Meesho Seller account.",
+      f2_title: "2000+ Products Ready in Stock",
+      f2_desc: "Huge catalog of trending and high-demand products ready for dropshipping.",
+      f3_title: "Professional Product Listing",
+      f3_desc: "Optimized product listings with high-converting titles, descriptions & images.",
+      f4_title: "High Profit Margin per Product",
+      f4_desc: "Earn strong, guaranteed profit margins on every single customer order.",
+      f5_title: "Payment Only After Order Arrival",
+      f5_desc: "Zero advance inventory investment — pay only when you receive customer orders.",
+      f6_title: "Wholesale Rate + Packing Charge Only",
+      f6_desc: "Direct wholesale pricing with transparent, minimal packaging charges.",
+      f7_title: "Complete Packing & Courier Dispatch",
+      f7_desc: "We handle professional packing, barcode labeling, and timely courier dispatch.",
+      f8_title: "Seamless Return Management",
+      f8_desc: "Returns are received at our facility and reusable items are restocked for your next orders.",
+      f9_title: "100% Compliant with Meesho Policies",
+      f9_desc: "Fully secure operations adhering strictly to official Meesho guidelines.",
+      cta_badge: "🎯 Easy E-Commerce",
+      cta_title: "You focus on Selling — We will handle everything else.",
+      cta_desc: "Start your Meesho dropshipping business today and earn high profits from home.",
+      cta_btn: "Get Started on WhatsApp",
+      contact_card_title: "Contact Information",
+      lbl_mobile: "Mobile / WhatsApp",
+      lbl_email: "Email Inquiry",
+      lbl_location: "Location",
+      val_location: "Surat, Gujarat, India",
+      lbl_hours: "Working Hours",
+      val_hours: "Monday - Saturday: 9:00 AM - 9:00 PM",
+      footer_sub: "Your Trusted Meesho Dropshipping Partner",
+      footer_powered: "Empowering Smart Online Sellers",
+      qr_pill_btn: "QR Code",
+      share_pill_btn: "Share",
+      qr_title: "Scan QR Code",
+      qr_desc: "Scan with your phone camera to quickly open or share OM Online Mart profile.",
+      qr_copy_btn: "Copy Link",
+      qr_save_btn: "Save QR",
+      share_title: "Share OM Online Mart",
+      toast_copy: "Link copied to clipboard!",
+      toast_vcard: "Contact card downloaded!",
+      toast_qr: "QR Code image downloaded!",
+      sticky_call: "Call Now",
+      sticky_wa: "WhatsApp",
+      sticky_share: "Share",
+      lang_changed: "Language changed: English"
+    }
+  };
+
+  let currentLang = localStorage.getItem('om_lang') || 'gu';
+
+  function setLanguage(lang, showToastNotification = false) {
+    if (!translations[lang]) return;
+    currentLang = lang;
+    localStorage.setItem('om_lang', lang);
+    document.documentElement.lang = lang;
+
+    // Update all i18n DOM elements
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (translations[lang][key]) {
+        el.textContent = translations[lang][key];
+      }
+    });
+
+    // Update active class on all language pill buttons
+    document.querySelectorAll('.lang-pill').forEach(btn => {
+      if (btn.getAttribute('data-lang') === lang) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    if (showToastNotification) {
+      showToast(translations[lang].lang_changed);
+    }
+  }
+
+  // Setup Language Pill Click Handlers
+  document.querySelectorAll('.lang-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const selectedLang = btn.getAttribute('data-lang');
+      if (selectedLang !== currentLang) {
+        setLanguage(selectedLang, true);
+      }
+    });
+  });
+
+  // Apply initial language
+  setLanguage(currentLang, false);
+
+  // =========================================================================
+  // STICKY TOP NAVBAR ON SCROLL
+  // =========================================================================
+  function handleScrollStickyNav() {
+    if (!stickyTopNav) return;
+    const scrollY = window.scrollY || window.pageYOffset;
+    if (scrollY > 150) {
+      stickyTopNav.classList.add('sticky-visible');
+    } else {
+      stickyTopNav.classList.remove('sticky-visible');
+    }
+  }
+
+  window.addEventListener('scroll', handleScrollStickyNav, { passive: true });
+
+  if (stickyBrandLogoBtn) {
+    stickyBrandLogoBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   }
 
   // =========================================================================
@@ -50,13 +272,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
           // If the app is not installed, user remains on page -> fallback to web url
           setTimeout(() => {
-            // Check if user is still focused on page (did not switch to app)
             if (Date.now() - clickTime < 2200 && !document.hidden) {
               window.open(webUrl, '_blank');
             }
           }, 1400);
         }
-        // On desktop, the standard link href (web URL) opens normally in new tab
       });
     });
   }
@@ -84,15 +304,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // =========================================================================
   // CLIPBOARD COPY UTILITY
   // =========================================================================
-  function copyToClipboard(text, successMsg = 'લિંક કોપી થઈ ગઈ! / Link copied!') {
+  function copyToClipboard(text, successMsg) {
+    const msg = successMsg || (translations[currentLang] ? translations[currentLang].toast_copy : 'Link copied!');
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(text).then(() => {
-        showToast(successMsg);
+        showToast(msg);
       }).catch(() => {
-        fallbackCopy(text, successMsg);
+        fallbackCopy(text, msg);
       });
     } else {
-      fallbackCopy(text, successMsg);
+      fallbackCopy(text, msg);
     }
   }
 
@@ -145,7 +366,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 
-    showToast('સંપર્ક સેવ ફાઈલ ડાઉનલોડ થઈ! / Contact saved!');
+    const msg = translations[currentLang] ? translations[currentLang].toast_vcard : 'Contact saved!';
+    showToast(msg);
   }
 
   const btnSaveContact = document.getElementById('btn-save-contact');
@@ -179,7 +401,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    showToast('QR Code ડાઉનલોડ થયો! / QR downloaded!');
+    const msg = translations[currentLang] ? translations[currentLang].toast_qr : 'QR downloaded!';
+    showToast(msg);
   }
 
   // Modal Open/Close Controls
@@ -231,7 +454,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function handleShare() {
     const shareData = {
       title: 'OM Online Mart - Meesho Selling & Dropshipping Service',
-      text: 'Meesho પર Selling શરૂ કરો - Account, Product Listing અને Order Dispatchની સંપૂર્ણ Service અમારી તરફથી.',
+      text: translations[currentLang].spotlight_desc,
       url: currentUrl
     };
 

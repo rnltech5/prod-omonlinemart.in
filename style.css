@@ -1,6 +1,9 @@
 /* ==========================================================================
    OM ONLINE MART - FULLY RESPONSIVE MODERN STYLESHEET
-   Supports: Mobile (<640px), Tablet (641px-1024px), Laptop & Desktop (>1024px)
+   Includes:
+   - Sticky Top Navbar with Logo & Brand on Scroll
+   - Two-Pill Interactive Language Switcher (GU | EN)
+   - Multi-device responsive grid (Desktop, Laptop, Tablet, Mobile)
    Brand Colors: Royal Blue (#0056d2) & Electric Orange (#ff5700)
    ========================================================================== */
 
@@ -131,6 +134,176 @@ body {
 }
 
 /* ==========================================================================
+   STICKY TOP NAVBAR (APPEARS SMOOTHLY ON SCROLL)
+   ========================================================================== */
+.sticky-top-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: rgba(6, 21, 42, 0.95);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  transform: translateY(-110%);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  padding: 8px 16px;
+}
+
+.sticky-top-navbar.sticky-visible {
+  transform: translateY(0);
+}
+
+.sticky-top-inner {
+  max-width: 1160px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sticky-brand-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #ffffff;
+  min-width: 0;
+}
+
+.sticky-nav-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+}
+
+.sticky-nav-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sticky-nav-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.sticky-nav-sub {
+  font-size: 0.7rem;
+  color: #ffd4b8;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-family: var(--font-gu);
+}
+
+.sticky-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.sticky-quick-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.88rem;
+  transition: var(--transition-fast);
+}
+
+.btn-quick-call {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+}
+
+.btn-quick-wa {
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+}
+
+.sticky-quick-btn:hover {
+  transform: scale(1.08);
+}
+
+/* ==========================================================================
+   LANGUAGE SWITCHER PILLS (TWO-PILL TAB)
+   ========================================================================== */
+.lang-switch-pills {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius-pill);
+  padding: 3px;
+  gap: 2px;
+  position: relative;
+}
+
+.lang-pill {
+  background: transparent;
+  border: none;
+  color: #cbd5e1;
+  font-family: var(--font-latin);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.lang-pill small {
+  font-size: 0.65rem;
+  opacity: 0.8;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.lang-pill:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.lang-pill.active {
+  background: var(--grad-orange);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(255, 87, 0, 0.4);
+  font-weight: 700;
+}
+
+.lang-switch-sticky {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  padding: 2px;
+}
+
+.lang-switch-sticky .lang-pill {
+  padding: 4px 8px;
+  font-size: 0.72rem;
+}
+
+/* ==========================================================================
    MAIN APP WRAPPER CONTAINER (RESPONSIVE)
    ========================================================================== */
 .app-container {
@@ -151,7 +324,7 @@ body {
   position: relative;
   background: var(--grad-header);
   color: var(--text-white);
-  padding: 24px 20px 32px;
+  padding: 22px 18px 30px;
   box-shadow: 0 10px 35px rgba(6, 25, 51, 0.35);
   overflow: hidden;
   box-sizing: border-box;
@@ -175,6 +348,14 @@ body {
   margin-bottom: 20px;
   position: relative;
   z-index: 2;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.top-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .badge-live {
@@ -190,6 +371,7 @@ body {
   font-weight: 600;
   letter-spacing: 0.4px;
   color: #c9e2ff;
+  font-family: var(--font-gu);
 }
 
 .badge-live i {
@@ -205,7 +387,7 @@ body {
 
 .top-action-buttons {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
 .icon-btn-pill {
@@ -214,20 +396,20 @@ body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 8px 14px;
+  padding: 6px 12px;
   border-radius: var(--radius-pill);
   background: rgba(255, 255, 255, 0.14);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.22);
   color: var(--text-white);
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   transition: var(--transition-fast);
 }
 
 .icon-btn-pill i {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .btn-tooltip {
@@ -375,6 +557,7 @@ body {
 .location-pill {
   background: rgba(0, 0, 0, 0.25);
   color: #cbd5e1;
+  font-family: var(--font-gu);
 }
 
 .location-pill i {
@@ -400,6 +583,7 @@ body {
   font-weight: 600;
   padding: 5px 12px;
   border-radius: var(--radius-pill);
+  font-family: var(--font-gu);
 }
 
 .feat-pill i {
@@ -663,7 +847,7 @@ body {
 }
 
 /* ==========================================================================
-   SERVICE CHECKLIST SECTION (GUJARATI DETAILS)
+   SERVICE CHECKLIST SECTION (GUJARATI & ENGLISH DETAILS)
    ========================================================================== */
 .services-list-section {
   display: flex;
@@ -960,6 +1144,7 @@ a.info-val:hover {
 .footer-brand p {
   font-size: 0.74rem;
   color: #94a3b8;
+  font-family: var(--font-gu);
 }
 
 .copyright {
@@ -971,6 +1156,7 @@ a.info-val:hover {
   font-size: 0.75rem;
   color: var(--primary-orange-light);
   font-weight: 500;
+  font-family: var(--font-gu);
 }
 
 /* ==========================================================================
@@ -1004,7 +1190,7 @@ a.info-val:hover {
   padding: 10px 12px;
   border-radius: var(--radius-pill);
   text-decoration: none;
-  font-family: var(--font-latin);
+  font-family: var(--font-gu);
   font-size: 0.86rem;
   font-weight: 700;
   border: none;
@@ -1055,7 +1241,7 @@ a.info-val:hover {
   align-items: center;
   justify-content: center;
   padding: 20px;
-  z-index: 999;
+  z-index: 1001;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
@@ -1169,6 +1355,7 @@ a.info-val:hover {
   background: var(--primary-blue);
   color: #ffffff;
   transition: var(--transition-fast);
+  font-family: var(--font-gu);
 }
 
 .btn-modal-action:hover {
@@ -1272,6 +1459,26 @@ a.info-val:hover {
 
   .profile-card {
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  }
+
+  .top-nav-bar {
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-nav-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .top-nav-right {
+    justify-content: space-between;
+  }
+
+  .badge-live {
+    align-self: flex-start;
   }
 }
 
@@ -1472,7 +1679,6 @@ a.info-val:hover {
     text-align: left;
   }
 
-  /* On large desktop screens, the sticky bar can be hidden or gracefully anchored */
   .sticky-bottom-bar {
     display: none;
   }
