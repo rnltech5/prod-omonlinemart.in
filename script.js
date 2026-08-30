@@ -10,7 +10,22 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  const currentUrl = window.location.href.includes('http') ? window.location.href : 'https://omonlinemart.in';
+  // =========================================================================
+  // 🔗 APP CONFIGURATION & LINKS (EDIT YOUR LINKS HERE)
+  // =========================================================================
+  const APP_CONFIG = {
+    // 📄 Paste your Google Drive PDF Catalog link here:
+    // Example: "https://drive.google.com/file/d/1A2B3C4D5E6F/view?usp=sharing"
+    CATALOG_DRIVE_URL: "https://drive.google.com/drive/folders/1MZryYIel2VUDi2lZCdPLwBD6AIZlhYpZ?usp=sharing",
+
+    // 🌐 Website base URL
+    WEBSITE_URL: "https://omonlinemart.in",
+
+    // 📞 Primary Contact Number
+    CONTACT_PHONE: "+917304429236"
+  };
+
+  const currentUrl = window.location.href.includes('http') ? window.location.href : APP_CONFIG.WEBSITE_URL;
   const qrCanvas = document.getElementById('qr-code-canvas');
   const qrModal = document.getElementById('qr-modal');
   const shareModal = document.getElementById('share-modal');
@@ -19,15 +34,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const toastIcon = document.getElementById('toast-icon');
   const stickyTopNav = document.getElementById('sticky-top-nav');
   const stickyBrandLogoBtn = document.getElementById('sticky-brand-logo-btn');
+  const headerCatalogBtn = document.getElementById('header-catalog-btn');
+
+  // Dynamically set Catalog Google Drive URL from APP_CONFIG
+  if (headerCatalogBtn && APP_CONFIG.CATALOG_DRIVE_URL) {
+    headerCatalogBtn.href = APP_CONFIG.CATALOG_DRIVE_URL;
+  }
 
   // =========================================================================
   // BILINGUAL TRANSLATIONS DICTIONARY (GUJARATI & ENGLISH)
   // =========================================================================
   const translations = {
     gu: {
-      verified_badge: "Verified Business Partner",
       brand_category: "Meesho Selling & Dropshipping Service",
-      location: "Gujarat",
+      catalog_btn: "View All Catalog",
       feat_products: "2000+ Products",
       feat_dispatch: "Fast Dispatch",
       feat_profit: "High Profit",
@@ -70,10 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
       f8_desc: "Return Product અમારી પાસે આવશે અને Reusable હોય તો આગળના Orderમાં ઉપયોગ કરીશું.",
       f9_title: "તમામ કામગીરી Meesho Policy મુજબ",
       f9_desc: "૧૦૦% સિક્યોર અને Meesho ની તમામ ગાઇડલાઇન્સ મુજબ કામગીરી.",
-      cta_badge: "🎯 Easy E-Commerce",
-      cta_title: "તમારે માત્ર Selling પર ધ્યાન આપવાનું - બાકીનું કામ અમે સંભાળીશું.",
-      cta_desc: "આજે જ તમારો Meesho બિઝનેસ શરૂ કરો અને ઘરે બેઠા સારો નફો કમાઓ.",
-      cta_btn: "WhatsApp પર શરૂ કરો",
       contact_card_title: "સંપર્ક માહિતી (Contact Information)",
       lbl_mobile: "મોબાઇલ નંબર (Mobile / WhatsApp)",
       lbl_location: "સ્થળ (Location)",
@@ -96,9 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
       lang_changed: "ભાષા બદલાઈ ગઈ: ગુજરાતી"
     },
     en: {
-      verified_badge: "Verified Business Partner",
       brand_category: "Meesho Selling & Dropshipping Service",
-      location: "Gujarat",
+      catalog_btn: "View All Catalog",
       feat_products: "2000+ Products",
       feat_dispatch: "Fast Dispatch",
       feat_profit: "High Profit",
@@ -141,10 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
       f8_desc: "Returns are received at our facility and reusable items are restocked for your next orders.",
       f9_title: "100% Compliant with Meesho Policies",
       f9_desc: "Fully secure operations adhering strictly to official Meesho guidelines.",
-      cta_badge: "🎯 Easy E-Commerce",
-      cta_title: "You focus on Selling — We will handle everything else.",
-      cta_desc: "Start your Meesho dropshipping business today and earn high profits from home.",
-      cta_btn: "Get Started on WhatsApp",
       contact_card_title: "Contact Information",
       lbl_mobile: "Mobile / WhatsApp",
       lbl_location: "Location",

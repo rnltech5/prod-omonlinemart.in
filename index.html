@@ -98,11 +98,6 @@
       
       <!-- Top Navigation & Language Switcher -->
       <div class="top-nav-bar">
-        <span class="badge-live">
-          <i class="fa-solid fa-circle-dot"></i> 
-          <span data-i18n="verified_badge">Verified Business Partner</span>
-        </span>
-
         <div class="top-nav-right">
           <!-- Main Two-Pill Language Selector -->
           <div class="lang-switch-pills" id="lang-switch-main" role="group" aria-label="Select Language">
@@ -149,37 +144,31 @@
                 <i class="fa-solid fa-phone-volume"></i>
                 <span>+91 7304429236</span>
               </a>
-              <span class="location-pill">
-                <i class="fa-solid fa-location-dot"></i> <span data-i18n="location">Gujarat</span>
-              </span>
-            </div>
-
-            <!-- Quick Feature Badges -->
-            <div class="features-pill-row">
-              <span class="feat-pill"><i class="fa-solid fa-box-open"></i> <span data-i18n="feat_products">2000+ Products</span></span>
-              <span class="feat-pill"><i class="fa-solid fa-truck-fast"></i> <span data-i18n="feat_dispatch">Fast Dispatch</span></span>
-              <span class="feat-pill"><i class="fa-solid fa-chart-line"></i> <span data-i18n="feat_profit">High Profit</span></span>
+              <a href="https://drive.google.com/" target="_blank" rel="noopener noreferrer" class="contact-pill catalog-pill" id="header-catalog-btn" title="View All Catalog">
+                <i class="fa-solid fa-file-pdf"></i>
+                <span data-i18n="catalog_btn">View All Catalog</span>
+                <i class="fa-solid fa-arrow-right"></i>
+              </a>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Header Announcement Spotlight (Responsive on Desktop/Tablet) -->
-        <div class="header-spotlight-card">
-          <div class="spotlight-badge">
-            <i class="fa-solid fa-bullhorn"></i> <span data-i18n="spotlight_badge">Official Service</span>
-          </div>
-          <h2 class="spotlight-title" data-i18n="spotlight_title">Meesho Selling &amp; Dropshipping Service</h2>
-          <p class="spotlight-desc" data-i18n="spotlight_desc">
-            Meesho પર Selling શરૂ કરો - Account, Product Listing અને Order Dispatchની સંપૂર્ણ Service અમારી તરફથી.
-          </p>
-          <div class="spotlight-action">
-            <a href="https://api.whatsapp.com/send/?phone=7304429236&text=નમસ્તે%20OM%20Online%20Mart,%20મને%20Meesho%20Service%20વિશે%20માહિતી%20જોઈએ%20છે.&type=phone_number&app_absent=0" 
-               data-app-url="whatsapp://send?phone=917304429236&text=નમસ્તે%20OM%20Online%20Mart,%20મને%20Meesho%20Service%20વિશે%20માહિતી%20જોઈએ%20છે."
-               class="btn-spotlight-wa app-intent-link" target="_blank" rel="noopener noreferrer">
-              <i class="fa-brands fa-whatsapp"></i>
-              <span data-i18n="spotlight_btn">WhatsApp પર સંપર્ક કરો</span>
-            </a>
-          </div>
+      <!-- Header Bottom Features Bar (Integrated Highlights Strip) -->
+      <div class="header-bottom-bar" aria-label="Key Highlights">
+        <div class="bar-item">
+          <i class="fa-solid fa-box-open"></i>
+          <span data-i18n="feat_products">2000+ Products</span>
+        </div>
+        <div class="bar-divider" aria-hidden="true"></div>
+        <div class="bar-item">
+          <i class="fa-solid fa-truck-fast"></i>
+          <span data-i18n="feat_dispatch">Fast Dispatch</span>
+        </div>
+        <div class="bar-divider" aria-hidden="true"></div>
+        <div class="bar-item">
+          <i class="fa-solid fa-chart-line"></i>
+          <span data-i18n="feat_profit">High Profit</span>
         </div>
       </div>
     </header>
@@ -291,6 +280,27 @@
         </div>
       </section>
 
+      <!-- Announcement Spotlight Card (Official Service) -->
+      <section class="spotlight-section" aria-label="Official Service Spotlight">
+        <div class="spotlight-card">
+          <div class="spotlight-badge">
+            <i class="fa-solid fa-bullhorn"></i> <span data-i18n="spotlight_badge">Official Service</span>
+          </div>
+          <h2 class="spotlight-title" data-i18n="spotlight_title">Meesho Selling &amp; Dropshipping Service</h2>
+          <p class="spotlight-desc" data-i18n="spotlight_desc">
+            Meesho પર Selling શરૂ કરો - Account, Product Listing અને Order Dispatchની સંપૂર્ણ Service અમારી તરફથી.
+          </p>
+          <div class="spotlight-action">
+            <a href="https://api.whatsapp.com/send/?phone=7304429236&text=નમસ્તે%20OM%20Online%20Mart,%20મને%20Meesho%20Service%20વિશે%20માહિતી%20જોઈએ%20છે.&type=phone_number&app_absent=0" 
+               data-app-url="whatsapp://send?phone=917304429236&text=નમસ્તે%20OM%20Online%20Mart,%20મને%20Meesho%20Service%20વિશે%20માહિતી%20જોઈએ%20છે."
+               class="btn-spotlight-wa app-intent-link" target="_blank" rel="noopener noreferrer">
+              <i class="fa-brands fa-whatsapp"></i>
+              <span data-i18n="spotlight_btn">WhatsApp પર સંપર્ક કરો</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
       <!-- Key Benefits / Services Checklist (Responsive 1/2/3 Column Grid) -->
       <section class="services-list-section" aria-label="Service Features">
         <div class="section-title-wrap">
@@ -376,26 +386,9 @@
         </div>
       </section>
 
-      <!-- Bottom Dual Column Row: CTA Banner + Contact Details -->
-      <section class="bottom-dual-row">
-        <!-- Final Call To Action Box -->
-        <div class="cta-banner" aria-label="Call to Action">
-          <div class="cta-badge" data-i18n="cta_badge">🎯 Easy E-Commerce</div>
-          <h3 class="cta-title" data-i18n="cta_title">
-            તમારે માત્ર Selling પર ધ્યાન આપવાનું - બાકીનું કામ અમે સંભાળીશું.
-          </h3>
-          <p class="cta-desc" data-i18n="cta_desc">
-            આજે જ તમારો Meesho બિઝનેસ શરૂ કરો અને ઘરે બેઠા સારો નફો કમાઓ.
-          </p>
-          <a href="https://api.whatsapp.com/send/?phone=7304429236&text=હેલો%20OM%20Online%20Mart,%20હું%20Meesho%20Selling%20શરૂ%20કરવા%20માગું%20છું.%20કૃપા%20કરીને%20માર્ગદર્શન%20આપો.&type=phone_number&app_absent=0" 
-             data-app-url="whatsapp://send?phone=917304429236&text=હેલો%20OM%20Online%20Mart,%20હું%20Meesho%20Selling%20શરૂ%20કરવા%20માગું%20છું.%20કૃપા%20કરીને%20માર્ગદર્શન%20આપો."
-             target="_blank" rel="noopener noreferrer" class="btn-cta-primary app-intent-link" id="btn-cta-whatsapp">
-            <i class="fa-brands fa-whatsapp"></i>
-            <span data-i18n="cta_btn">WhatsApp પર શરૂ કરો</span>
-          </a>
-        </div>
-
-        <!-- About / Contact Details Mini Card -->
+      <!-- Contact Details Section -->
+      <section class="contact-details-section">
+        <!-- About / Contact Details Card -->
         <div class="contact-details-card">
           <h4 data-i18n="contact_card_title">સંપર્ક માહિતી (Contact Information)</h4>
           <div class="contact-info-grid">

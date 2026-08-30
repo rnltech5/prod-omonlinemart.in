@@ -361,7 +361,7 @@ button, a {
   position: relative;
   background: var(--grad-header);
   color: var(--text-white);
-  padding: 1.25rem 1rem 1.75rem;
+  padding: 1.25rem 1rem 0;
   box-shadow: 0 0.625rem 2rem rgba(6, 25, 51, 0.35);
   overflow: hidden;
   box-sizing: border-box;
@@ -382,12 +382,11 @@ button, a {
 .top-nav-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 0.5rem;
   margin-bottom: 1.25rem;
   position: relative;
   z-index: 2;
-  flex-wrap: wrap;
 }
 
 .top-nav-right {
@@ -395,34 +394,6 @@ button, a {
   align-items: center;
   gap: 0.5rem;
   flex-shrink: 0;
-}
-
-.badge-live {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(0.5rem);
-  border: 0.0625rem solid rgba(255, 255, 255, 0.2);
-  padding: 0.3125rem 0.75rem;
-  border-radius: var(--radius-pill);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: #c9e2ff;
-  font-family: var(--font-gu);
-  white-space: nowrap;
-}
-
-.badge-live i {
-  color: #22c55e;
-  font-size: 0.6875rem;
-  animation: pulseDot 1.8s infinite ease-in-out;
-}
-
-@keyframes pulseDot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.85); }
 }
 
 .top-action-buttons {
@@ -562,29 +533,29 @@ button, a {
 .contact-pill-wrap {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: clamp(0.3125rem, 1.5vw, 0.5rem);
   flex-wrap: wrap;
   justify-content: center;
-  margin-bottom: 0.875rem;
+  margin-bottom: clamp(0.625rem, 2vw, 0.875rem);
 }
 
-.contact-pill, .location-pill {
+.contact-pill, .catalog-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.375rem;
-  font-size: 0.8125rem;
+  gap: clamp(0.25rem, 1.2vw, 0.375rem);
+  font-size: clamp(0.6875rem, 2.2vw, 0.8125rem);
   font-weight: 500;
-  padding: 0.375rem 0.875rem;
+  padding: clamp(0.25rem, 1vw, 0.375rem) clamp(0.5rem, 2vw, 0.875rem);
   border-radius: var(--radius-pill);
   text-decoration: none;
   white-space: nowrap;
+  transition: all var(--transition-fast);
 }
 
 .contact-pill {
   background: rgba(255, 255, 255, 0.16);
   border: 0.0625rem solid rgba(255, 255, 255, 0.25);
   color: #ffffff;
-  transition: var(--transition-fast);
 }
 
 .contact-pill:hover {
@@ -595,61 +566,136 @@ button, a {
 
 .contact-pill i {
   color: #ff9858;
+  font-size: clamp(0.6875rem, 2vw, 0.8125rem);
 }
 
 .contact-pill:hover i {
   color: #ffffff;
 }
 
-.location-pill {
-  background: rgba(0, 0, 0, 0.25);
-  color: #cbd5e1;
+.catalog-pill {
+  background: rgba(255, 87, 0, 0.22);
+  border: 0.0625rem solid rgba(255, 119, 40, 0.45);
+  color: #ffffff;
   font-family: var(--font-gu);
 }
 
-.location-pill i {
-  color: #38bdf8;
+.catalog-pill:hover {
+  background: var(--grad-orange);
+  border-color: var(--primary-orange);
+  transform: translateY(-0.0625rem);
 }
 
-.features-pill-row {
+.catalog-pill i:first-child {
+  color: #ff9858;
+  font-size: clamp(0.6875rem, 2vw, 0.8125rem);
+}
+
+.catalog-pill i:last-child {
+  color: #ffd4b8;
+  font-size: clamp(0.625rem, 1.8vw, 0.75rem);
+  transition: transform var(--transition-fast);
+}
+
+.catalog-pill:hover i {
+  color: #ffffff;
+}
+
+.catalog-pill:hover i:last-child {
+  transform: translateX(0.1875rem);
+}
+
+/* Header Bottom Features / Highlights Bar */
+.header-bottom-bar {
+  margin: 1.25rem -1rem 0;
+  background: rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(0.5rem);
+  -webkit-backdrop-filter: blur(0.5rem);
+  border-top: 0.0625rem solid rgba(255, 255, 255, 0.12);
   display: flex;
-  gap: 0.375rem;
-  justify-content: center;
-  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+  padding: clamp(0.625rem, 1.8vw, 0.8125rem) clamp(0.5rem, 2vw, 1.25rem);
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2;
 }
 
-.feat-pill {
-  display: inline-flex;
+.bar-item {
+  display: flex;
   align-items: center;
-  gap: 0.3125rem;
-  background: rgba(255, 87, 0, 0.2);
-  border: 0.0625rem solid rgba(255, 119, 40, 0.4);
-  color: #ffe6d5;
-  font-size: 0.75rem;
+  justify-content: center;
+  gap: clamp(0.3125rem, 1.2vw, 0.5rem);
+  font-size: clamp(0.6875rem, 2vw, 0.8125rem);
   font-weight: 600;
-  padding: 0.25rem 0.625rem;
-  border-radius: var(--radius-pill);
+  color: #e2e8f0;
   font-family: var(--font-gu);
   white-space: nowrap;
+  flex: 1;
+  text-align: center;
+  transition: transform var(--transition-fast), color var(--transition-fast);
 }
 
-.feat-pill i {
+.bar-item:hover {
+  color: #ffffff;
+  transform: translateY(-0.0625rem);
+}
+
+.bar-item i {
   color: var(--primary-orange-light);
-  font-size: 0.6875rem;
+  font-size: clamp(0.75rem, 2vw, 0.9375rem);
 }
 
-.header-spotlight-card {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(0.75rem);
-  -webkit-backdrop-filter: blur(0.75rem);
-  border: 0.0625rem solid rgba(255, 255, 255, 0.18);
-  border-radius: var(--radius-md);
-  padding: 1.125rem 1.25rem;
+.bar-divider {
+  width: 0.0625rem;
+  height: 1.125rem;
+  background: rgba(255, 255, 255, 0.15);
+  flex-shrink: 0;
+}
+
+/* Spotlight Banner Section */
+.spotlight-section {
+  width: 100%;
+}
+
+.spotlight-card {
+  background: var(--grad-header);
+  border: 0.0625rem solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.625rem;
   box-sizing: border-box;
   width: 100%;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0.625rem 2rem rgba(6, 25, 51, 0.25);
+  color: #ffffff;
+}
+
+.spotlight-card::before {
+  content: '';
+  position: absolute;
+  top: -3rem;
+  right: -3rem;
+  width: 12rem;
+  height: 12rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 102, 255, 0.35) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.spotlight-card::after {
+  content: '';
+  position: absolute;
+  bottom: -3rem;
+  left: -3rem;
+  width: 12rem;
+  height: 12rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 87, 0, 0.25) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .spotlight-badge {
@@ -663,44 +709,52 @@ button, a {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  padding: 0.1875rem 0.625rem;
+  padding: 0.25rem 0.75rem;
   border-radius: var(--radius-pill);
+  position: relative;
+  z-index: 1;
 }
 
 .spotlight-title {
-  font-size: clamp(0.9375rem, 2vw, 1.125rem);
+  font-size: clamp(1rem, 2.2vw, 1.25rem);
   font-weight: 700;
   color: #ffffff;
   line-height: 1.35;
+  position: relative;
+  z-index: 1;
 }
 
 .spotlight-desc {
   font-family: var(--font-gu);
-  font-size: clamp(0.8125rem, 1.8vw, 0.9375rem);
+  font-size: clamp(0.84375rem, 1.8vw, 0.9375rem);
   line-height: 1.55;
-  color: #e2e8f0;
+  color: #cbd5e1;
   font-weight: 500;
+  position: relative;
+  z-index: 1;
 }
 
 .spotlight-action {
-  margin-top: 0.25rem;
+  margin-top: 0.375rem;
+  position: relative;
+  z-index: 1;
 }
 
 .btn-spotlight-wa {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.625rem;
   background: var(--whatsapp-color);
   color: #ffffff;
-  padding: 0.625rem 1.125rem;
+  padding: 0.75rem 1.25rem;
   border-radius: var(--radius-pill);
   font-family: var(--font-gu);
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-weight: 700;
   text-decoration: none;
-  transition: var(--transition-fast);
-  box-shadow: 0 0.25rem 0.75rem rgba(37, 211, 102, 0.35);
+  transition: all var(--transition-fast);
+  box-shadow: 0 0.25rem 1rem rgba(37, 211, 102, 0.4);
   box-sizing: border-box;
   width: 100%;
 }
@@ -708,6 +762,11 @@ button, a {
 .btn-spotlight-wa:hover {
   background: #20ba5a;
   transform: translateY(-0.125rem);
+  box-shadow: 0 0.375rem 1.25rem rgba(37, 211, 102, 0.55);
+}
+
+.btn-spotlight-wa:active {
+  transform: scale(0.98);
 }
 
 /* --------------------------------------------------------------------------
@@ -969,119 +1028,10 @@ button, a {
 }
 
 /* --------------------------------------------------------------------------
-   Bottom Dual Row (CTA Banner + Contact Details)
+   Contact Details Section
    -------------------------------------------------------------------------- */
-.bottom-dual-row {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.25rem;
+.contact-details-section {
   width: 100%;
-}
-
-.cta-banner {
-  background: var(--grad-header);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem 1.25rem;
-  text-align: center;
-  color: #ffffff;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 0.75rem 2rem rgba(6, 25, 51, 0.3);
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.cta-banner::before {
-  content: '';
-  position: absolute;
-  top: -2.5rem;
-  left: -2.5rem;
-  width: 10rem;
-  height: 10rem;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(0, 102, 255, 0.35) 0%, transparent 70%);
-}
-
-.cta-banner::after {
-  content: '';
-  position: absolute;
-  bottom: -2.5rem;
-  right: -2.5rem;
-  width: 11rem;
-  height: 11rem;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 87, 0, 0.35) 0%, transparent 70%);
-}
-
-.cta-badge {
-  display: inline-block;
-  align-self: center;
-  background: rgba(255, 87, 0, 0.25);
-  border: 0.0625rem solid rgba(255, 119, 40, 0.5);
-  color: #ffd6be;
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 0.25rem 0.75rem;
-  border-radius: var(--radius-pill);
-  margin-bottom: 0.75rem;
-}
-
-.cta-title {
-  font-family: var(--font-gu);
-  font-size: clamp(1rem, 2.2vw, 1.1875rem);
-  font-weight: 700;
-  line-height: 1.45;
-  color: #ffffff;
-  margin-bottom: 0.5rem;
-  position: relative;
-  z-index: 1;
-}
-
-.cta-desc {
-  font-family: var(--font-gu);
-  font-size: clamp(0.8125rem, 1.6vw, 0.875rem);
-  color: #cbd5e1;
-  line-height: 1.4;
-  margin-bottom: 1.125rem;
-  position: relative;
-  z-index: 1;
-}
-
-.btn-cta-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.625rem;
-  width: 100%;
-  background: var(--whatsapp-color);
-  color: #ffffff;
-  padding: 0.8125rem 1.25rem;
-  border-radius: var(--radius-pill);
-  font-family: var(--font-gu);
-  font-size: 0.9375rem;
-  font-weight: 700;
-  text-decoration: none;
-  box-shadow: 0 0.25rem 1rem rgba(37, 211, 102, 0.4);
-  transition: all var(--transition-fast);
-  position: relative;
-  z-index: 1;
-  box-sizing: border-box;
-}
-
-.btn-cta-primary:hover {
-  background: #20ba5a;
-  transform: translateY(-0.125rem);
-  box-shadow: 0 0.375rem 1.375rem rgba(37, 211, 102, 0.55);
-}
-
-.btn-cta-primary:active {
-  transform: scale(0.98);
-}
-
-.btn-cta-primary i {
-  font-size: 1.1875rem;
 }
 
 /* Contact Details Card */
@@ -1094,6 +1044,7 @@ button, a {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  width: 100%;
 }
 
 .contact-details-card h4 {
@@ -1454,11 +1405,7 @@ a.info-val:hover {
   .top-nav-bar {
     gap: 0.375rem;
     margin-bottom: 1rem;
-  }
-
-  .badge-live {
-    font-size: 0.6875rem;
-    padding: 0.25rem 0.5rem;
+    justify-content: flex-end;
   }
 
   .lang-pill {
@@ -1509,6 +1456,50 @@ a.info-val:hover {
   .sticky-nav-sub {
     display: none;
   }
+
+  .contact-pill-wrap {
+    gap: 0.3125rem;
+    margin-bottom: 0.625rem;
+  }
+
+  .contact-pill, .catalog-pill {
+    font-size: 0.6875rem;
+    padding: 0.21875rem 0.5rem;
+    gap: 0.25rem;
+  }
+
+  .contact-pill i, .catalog-pill i {
+    font-size: 0.6875rem;
+  }
+
+  .header-bottom-bar {
+    margin: 1rem -0.75rem 0;
+    padding: 0.5rem 0.375rem;
+  }
+
+  .bar-item {
+    font-size: 0.625rem;
+    gap: 0.25rem;
+  }
+
+  .bar-item i {
+    font-size: 0.6875rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   BREAKPOINTS: NARROW SCREEN (< 360px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 22.5em) {
+  .contact-pill, .catalog-pill {
+    font-size: 0.625rem;
+    padding: 0.1875rem 0.375rem;
+  }
+
+  .bar-item {
+    font-size: 0.5625rem;
+    gap: 0.1875rem;
+  }
 }
 
 /* ==========================================================================
@@ -1524,49 +1515,32 @@ a.info-val:hover {
     border: 0.0625rem solid rgba(255, 255, 255, 0.85);
   }
 
+  .profile-card {
+    padding: 1.75rem 1.5rem 0;
+  }
+
+  .header-bottom-bar {
+    margin: 1.5rem -1.5rem 0;
+    padding: 0.875rem 1.75rem;
+  }
+
   .header-grid-layout {
-    display: grid;
-    grid-template-columns: 1fr 1.1fr;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 1.5rem;
+    width: 100%;
   }
 
   .profile-identity {
-    align-items: flex-start;
+    align-items: center;
     text-align: left;
     flex-direction: row;
-    gap: 1rem;
+    justify-content: center;
+    gap: 1.25rem;
   }
 
-  .identity-text {
-    align-items: flex-start;
-    text-align: left;
-  }
-
-  .contact-pill-wrap, .features-pill-row {
-    justify-content: flex-start;
-  }
-
-  .btn-tooltip {
-    display: inline-block;
-  }
-
-  .content-body {
-    padding: 1.75rem 1.5rem 6.5rem;
-  }
-
-  .actions-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.875rem;
-  }
-
-  .features-list-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.875rem;
-  }
-
-  .bottom-dual-row {
-    grid-template-columns: 1fr;
+  .spotlight-card {
+    padding: 1.75rem 2rem;
   }
 
   .sticky-bottom-bar {
@@ -1590,21 +1564,31 @@ a.info-val:hover {
   }
 
   .profile-card {
-    padding: 2rem 2.25rem 2.5rem;
+    padding: 2rem 2.25rem 0;
+  }
+
+  .header-bottom-bar {
+    margin: 2rem -2.25rem 0;
+    padding: 1rem 2.5rem;
   }
 
   .header-grid-layout {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 2.25rem;
+    width: 100%;
   }
 
   .profile-identity {
     flex-direction: row;
     align-items: center;
     text-align: left;
-    gap: 1.5rem;
+    justify-content: center;
+    gap: 2rem;
+  }
+
+  .spotlight-card {
+    padding: 2rem 2.25rem;
   }
 
   .avatar-wrapper {
@@ -1655,24 +1639,10 @@ a.info-val:hover {
     gap: 1rem;
   }
 
-  .bottom-dual-row {
-    grid-template-columns: 1.35fr 1fr;
-    gap: 1.5rem;
-  }
-
-  .cta-banner {
-    padding: 2rem 1.75rem;
-    text-align: left;
-  }
-
-  .cta-badge {
-    align-self: flex-start;
-  }
-
-  .btn-cta-primary {
-    width: auto;
-    align-self: flex-start;
-    padding: 0.8125rem 1.75rem;
+  .contact-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
   }
 
   .sticky-bottom-bar {
