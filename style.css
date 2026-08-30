@@ -112,7 +112,7 @@ button, a {
 }
 
 /* --------------------------------------------------------------------------
-   Ambient Background Lights (Fixed / Fluid)
+   Ambient Background Lights (Fluid)
    -------------------------------------------------------------------------- */
 .ambient-bg {
   position: fixed;
@@ -379,7 +379,6 @@ button, a {
   pointer-events: none;
 }
 
-/* Top Nav Bar inside Header */
 .top-nav-bar {
   display: flex;
   align-items: center;
@@ -468,7 +467,6 @@ button, a {
   transform: scale(0.95);
 }
 
-/* Header Content Grid (Stacked on Mobile, Dual Column on Tablet/Desktop) */
 .header-grid-layout {
   display: flex;
   flex-direction: column;
@@ -640,7 +638,6 @@ button, a {
   font-size: 0.6875rem;
 }
 
-/* Header Spotlight Announcement Card */
 .header-spotlight-card {
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(0.75rem);
@@ -714,10 +711,10 @@ button, a {
 }
 
 /* --------------------------------------------------------------------------
-   Content Body
+   Content Body (Ensuring Bottom Space for Mobile Sticky Bar)
    -------------------------------------------------------------------------- */
 .content-body {
-  padding: 1.5rem 1rem 5.5rem; /* Bottom padding for sticky mobile bar */
+  padding: 1.5rem 1rem 6rem; /* 6rem ensures no content is hidden behind sticky bottom nav */
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -725,7 +722,6 @@ button, a {
   width: 100%;
 }
 
-/* Section Headings */
 .section-title-wrap {
   display: flex;
   justify-content: space-between;
@@ -874,7 +870,6 @@ button, a {
   color: var(--primary-blue);
 }
 
-/* Tile Themes */
 .card-whatsapp .action-icon {
   background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
   box-shadow: 0 0.25rem 0.75rem rgba(37, 211, 102, 0.28);
@@ -1156,67 +1151,6 @@ button, a {
 a.info-val:hover {
   color: var(--primary-blue);
   text-decoration: underline;
-}
-
-/* --------------------------------------------------------------------------
-   Footer
-   -------------------------------------------------------------------------- */
-.app-footer {
-  background: #06152a;
-  color: #94a3b8;
-  padding: 1.75rem 1.25rem;
-  margin-top: auto;
-  border-top: 0.0625rem solid rgba(255, 255, 255, 0.08);
-  box-sizing: border-box;
-  width: 100%;
-}
-
-.footer-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 0.625rem;
-  width: 100%;
-}
-
-.footer-brand {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  text-align: left;
-}
-
-.footer-logo {
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: 50%;
-  background: #ffffff;
-  border: 0.09375rem solid #ffffff;
-}
-
-.footer-brand h5 {
-  font-size: 0.9375rem;
-  color: #ffffff;
-  font-weight: 700;
-}
-
-.footer-brand p {
-  font-size: 0.71875rem;
-  color: #94a3b8;
-  font-family: var(--font-gu);
-}
-
-.copyright {
-  font-size: 0.75rem;
-  color: #64748b;
-}
-
-.powered-by {
-  font-size: 0.71875rem;
-  color: var(--primary-orange-light);
-  font-weight: 500;
-  font-family: var(--font-gu);
 }
 
 /* --------------------------------------------------------------------------
@@ -1565,7 +1499,7 @@ a.info-val:hover {
   }
 
   .action-arrow {
-    display: none; /* Hide chevron on small phones to maximize text room */
+    display: none;
   }
 
   .sticky-top-navbar {
@@ -1573,7 +1507,7 @@ a.info-val:hover {
   }
 
   .sticky-nav-sub {
-    display: none; /* Save horizontal space on small phones */
+    display: none;
   }
 }
 
@@ -1615,6 +1549,10 @@ a.info-val:hover {
 
   .btn-tooltip {
     display: inline-block;
+  }
+
+  .content-body {
+    padding: 1.75rem 1.5rem 6.5rem;
   }
 
   .actions-grid {
@@ -1688,7 +1626,7 @@ a.info-val:hover {
   }
 
   .content-body {
-    padding: 2.25rem 2.25rem 2.75rem;
+    padding: 2.25rem 2.25rem 3rem;
     gap: 2.5rem;
   }
 
@@ -1735,12 +1673,6 @@ a.info-val:hover {
     width: auto;
     align-self: flex-start;
     padding: 0.8125rem 1.75rem;
-  }
-
-  .footer-inner {
-    flex-direction: row;
-    justify-content: space-between;
-    text-align: left;
   }
 
   .sticky-bottom-bar {

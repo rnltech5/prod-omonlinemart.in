@@ -20,12 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const stickyTopNav = document.getElementById('sticky-top-nav');
   const stickyBrandLogoBtn = document.getElementById('sticky-brand-logo-btn');
 
-  // Dynamic Year in Footer
-  const yearSpan = document.getElementById('year-span');
-  if (yearSpan) {
-    yearSpan.textContent = new Date().getFullYear();
-  }
-
   // =========================================================================
   // BILINGUAL TRANSLATIONS DICTIONARY (GUJARATI & ENGLISH)
   // =========================================================================
@@ -82,13 +76,10 @@ document.addEventListener('DOMContentLoaded', () => {
       cta_btn: "WhatsApp પર શરૂ કરો",
       contact_card_title: "સંપર્ક માહિતી (Contact Information)",
       lbl_mobile: "મોબાઇલ નંબર (Mobile / WhatsApp)",
-      lbl_email: "ઈમેઈલ (Email Inquiry)",
       lbl_location: "સ્થળ (Location)",
       val_location: "Surat, Gujarat, India",
       lbl_hours: "સર્વિસ સમય (Working Hours)",
       val_hours: "સોમવાર - શનિવાર: 9:00 AM - 9:00 PM",
-      footer_sub: "Your Trusted Meesho Dropshipping Partner",
-      footer_powered: "Empowering Smart Online Sellers",
       qr_pill_btn: "QR Code",
       share_pill_btn: "Share",
       qr_title: "સ્કેન કરો / Scan QR Code",
@@ -156,13 +147,10 @@ document.addEventListener('DOMContentLoaded', () => {
       cta_btn: "Get Started on WhatsApp",
       contact_card_title: "Contact Information",
       lbl_mobile: "Mobile / WhatsApp",
-      lbl_email: "Email Inquiry",
       lbl_location: "Location",
       val_location: "Surat, Gujarat, India",
       lbl_hours: "Working Hours",
       val_hours: "Monday - Saturday: 9:00 AM - 9:00 PM",
-      footer_sub: "Your Trusted Meesho Dropshipping Partner",
-      footer_powered: "Empowering Smart Online Sellers",
       qr_pill_btn: "QR Code",
       share_pill_btn: "Share",
       qr_title: "Scan QR Code",
@@ -346,7 +334,6 @@ document.addEventListener('DOMContentLoaded', () => {
       'ORG:OM Online Mart (Meesho Dropshipping Service)',
       'TITLE:Meesho Selling & Dropshipping Partner',
       'TEL;TYPE=CELL,VOICE,pref:+917304429236',
-      'EMAIL;TYPE=INTERNET,WORK:omonlinemart@gmail.com',
       'URL:https://omonlinemart.in',
       'ADR;TYPE=WORK:;;Surat;Gujarat;;India',
       'X-SOCIALPROFILE;TYPE=instagram:https://www.instagram.com/om_online_mart/',
@@ -405,7 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showToast(msg);
   }
 
-  // Modal Open/Close Controls
+  // Modal Controls
   function openModal(modal) {
     if (!modal) return;
     modal.classList.add('active');
@@ -420,7 +407,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.overflow = '';
   }
 
-  // QR Modal Trigger
   const btnQrModal = document.getElementById('btn-qr-modal');
   const btnCloseQr = document.getElementById('btn-close-qr');
   const btnCopyUrl = document.getElementById('btn-copy-url');
@@ -459,9 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if (isMobileDevice() && navigator.share && navigator.canShare && navigator.canShare(shareData)) {
-      navigator.share(shareData).catch(() => {
-        // User cancelled or failed -> fallback to modal
-      });
+      navigator.share(shareData).catch(() => {});
     } else {
       openModal(shareModal);
     }
