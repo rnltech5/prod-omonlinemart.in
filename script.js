@@ -47,7 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const translations = {
     gu: {
       brand_category: "Meesho Selling & Dropshipping Service",
-      catalog_btn: "View All Catalog",
+      catalog_btn: "પ્રોડક્ટ કેટલોગ",
+      catalog_badge: "2000+ Products",
+      catalog_sub: "Google Drive • PDF Catalogs",
       feat_products: "2000+ Products",
       feat_dispatch: "Fast Dispatch",
       feat_profit: "High Profit",
@@ -113,7 +115,9 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     en: {
       brand_category: "Meesho Selling & Dropshipping Service",
-      catalog_btn: "View All Catalog",
+      catalog_btn: "Product Catalog",
+      catalog_badge: "2000+ Products",
+      catalog_sub: "Google Drive • PDF Catalogs",
       feat_products: "2000+ Products",
       feat_dispatch: "Fast Dispatch",
       feat_profit: "High Profit",
