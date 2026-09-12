@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Example: "https://drive.google.com/file/d/1A2B3C4D5E6F/view?usp=sharing"
     CATALOG_DRIVE_URL: "https://drive.google.com/drive/folders/1MZryYIel2VUDi2lZCdPLwBD6AIZlhYpZ?usp=sharing",
 
+    // 📦 Packing Material Google Drive folder link:
+    PACKING_MATERIAL_DRIVE_URL: "https://drive.google.com/drive/folders/1997XRjgFyCZaapD6cocLtpmgY2aOVUvQ",
+
     // 🌐 Website base URL
     WEBSITE_URL: "https://omonlinemart.in",
 
@@ -35,10 +38,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const stickyTopNav = document.getElementById('sticky-top-nav');
   const stickyBrandLogoBtn = document.getElementById('sticky-brand-logo-btn');
   const headerCatalogBtn = document.getElementById('header-catalog-btn');
+  const headerPackingBtn = document.getElementById('header-packing-btn');
 
-  // Dynamically set Catalog Google Drive URL from APP_CONFIG
+  // Dynamically set Catalog & Packing Material Google Drive URLs from APP_CONFIG
   if (headerCatalogBtn && APP_CONFIG.CATALOG_DRIVE_URL) {
     headerCatalogBtn.href = APP_CONFIG.CATALOG_DRIVE_URL;
+  }
+  if (headerPackingBtn && APP_CONFIG.PACKING_MATERIAL_DRIVE_URL) {
+    headerPackingBtn.href = APP_CONFIG.PACKING_MATERIAL_DRIVE_URL;
   }
 
   // =========================================================================
@@ -47,7 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const translations = {
     gu: {
       brand_category: "Meesho Selling & Dropshipping Service",
-      catalog_btn: "View All Catalog",
+      catalog_btn: "પ્રોડક્ટ કેટલોગ",
+      packing_btn: "પેકિંગ મટીરીયલ",
       feat_products: "2000+ Products",
       feat_dispatch: "Fast Dispatch",
       feat_profit: "High Profit",
@@ -113,7 +121,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     en: {
       brand_category: "Meesho Selling & Dropshipping Service",
-      catalog_btn: "View All Catalog",
+      catalog_btn: "Product Catalog",
+      packing_btn: "Packing Material",
       feat_products: "2000+ Products",
       feat_dispatch: "Fast Dispatch",
       feat_profit: "High Profit",
