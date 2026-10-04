@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Example: "https://drive.google.com/file/d/1A2B3C4D5E6F/view?usp=sharing"
     CATALOG_DRIVE_URL: "https://drive.google.com/drive/folders/1MZryYIel2VUDi2lZCdPLwBD6AIZlhYpZ?usp=sharing",
 
+    // 📦 Packing Material Google Drive folder link:
+    PACKING_MATERIAL_DRIVE_URL: "https://drive.google.com/drive/folders/1997XRjgFyCZaapD6cocLtpmgY2aOVUvQ",
+
     // 🌐 Website base URL
     WEBSITE_URL: "https://omonlinemart.in",
 
@@ -35,10 +38,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const stickyTopNav = document.getElementById('sticky-top-nav');
   const stickyBrandLogoBtn = document.getElementById('sticky-brand-logo-btn');
   const headerCatalogBtn = document.getElementById('header-catalog-btn');
+  const headerPackingBtn = document.getElementById('header-packing-btn');
 
-  // Dynamically set Catalog Google Drive URL from APP_CONFIG
+  // Dynamically set Catalog & Packing Material Google Drive URLs from APP_CONFIG
   if (headerCatalogBtn && APP_CONFIG.CATALOG_DRIVE_URL) {
     headerCatalogBtn.href = APP_CONFIG.CATALOG_DRIVE_URL;
+  }
+  if (headerPackingBtn && APP_CONFIG.PACKING_MATERIAL_DRIVE_URL) {
+    headerPackingBtn.href = APP_CONFIG.PACKING_MATERIAL_DRIVE_URL;
   }
 
   // =========================================================================
@@ -47,7 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const translations = {
     gu: {
       brand_category: "Meesho Selling & Dropshipping Service",
-      catalog_btn: "View All Catalog",
+      catalog_btn: "પ્રોડક્ટ કેટલોગ",
+      packing_btn: "પેકિંગ મટીરીયલ",
       feat_products: "2000+ Products",
       feat_dispatch: "Fast Dispatch",
       feat_profit: "High Profit",
@@ -109,11 +117,21 @@ document.addEventListener('DOMContentLoaded', () => {
       sticky_call: "Call Now",
       sticky_wa: "WhatsApp",
       sticky_share: "Share",
-      lang_changed: "ભાષા બદલાઈ ગઈ: ગુજરાતી"
+      lang_changed: "ભાષા બદલાઈ ગઈ: ગુજરાતી",
+      drawer_subtext: "હોટ સેલિંગ પ્રોડક્ટ્સ • Meesho ડ્રોપશિપિંગ",
+      problem_loading: "Problem to load?",
+      expand_view: "મોટો જુઓ",
+      download_btn: "Download",
+      download_hd: "HD ડાઉનલોડ",
+      search_placeholder: "શીટ નંબર શોધો (દા.ત. 15, 80)...",
+      toast_downloading: "ડાઉનલોડ શરૂ થઈ રહ્યું છે...",
+      toast_download_success: "શીટ સફળતાપૂર્વક ડાઉનલોડ થઈ!",
+      toast_download_error: "ડાઉનલોડ કરવામાં સમસ્યા આવી, Drive લિંક અજમાવો."
     },
     en: {
       brand_category: "Meesho Selling & Dropshipping Service",
-      catalog_btn: "View All Catalog",
+      catalog_btn: "Product Catalog",
+      packing_btn: "Packing Material",
       feat_products: "2000+ Products",
       feat_dispatch: "Fast Dispatch",
       feat_profit: "High Profit",
@@ -175,7 +193,16 @@ document.addEventListener('DOMContentLoaded', () => {
       sticky_call: "Call Now",
       sticky_wa: "WhatsApp",
       sticky_share: "Share",
-      lang_changed: "Language changed: English"
+      lang_changed: "Language changed: English",
+      drawer_subtext: "Hot Selling Products • Meesho Dropshipping",
+      problem_loading: "Problem to load?",
+      expand_view: "Expand View",
+      download_btn: "Download",
+      download_hd: "Download HD",
+      search_placeholder: "Search sheet number (e.g. 15, 80)...",
+      toast_downloading: "Starting download...",
+      toast_download_success: "Sheet downloaded successfully!",
+      toast_download_error: "Download failed, try Google Drive link."
     }
   };
 
@@ -192,6 +219,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const key = el.getAttribute('data-i18n');
       if (translations[lang][key]) {
         el.textContent = translations[lang][key];
+      }
+    });
+
+    // Update placeholder attributes
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+      const key = el.getAttribute('data-i18n-ph');
+      if (translations[lang][key]) {
+        el.placeholder = translations[lang][key];
       }
     });
 
@@ -499,4 +534,525 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize QR on startup
   initQRCode();
+
+  // =========================================================================
+  // 📦 PRODUCT CATALOG DRAWER & FULLSCREEN LIGHTBOX VIEWER
+  // =========================================================================
+  
+  // 1. Data Layer: 83 Sheets (images-0 to images-85, skipping 9, 10, 11)
+  const skippedSheets = new Set([9, 10, 11]);
+  const CATALOG_ITEMS = [];
+  for (let i = 0; i <= 85; i++) {
+    if (skippedSheets.has(i)) continue;
+    CATALOG_ITEMS.push({
+      id: i,
+      title: `HOT SELLING PRODUCT...7304429236-${i}`,
+      shortTitle: `HOT SELLING PRODUCT...7304429236-${i}`,
+      thumbUrl: `https://ik.imagekit.io/86fnw06jj/tr:w-250,q-55,f-auto/7304429236/HOT%20SELLING%20PRODUCT%207304429236-images-${i}.jpg`,
+      fullUrl: `https://ik.imagekit.io/86fnw06jj/tr:w-1200,q-80,f-auto/7304429236/HOT%20SELLING%20PRODUCT%207304429236-images-${i}.jpg`,
+      downloadUrl: `https://ik.imagekit.io/86fnw06jj/7304429236/HOT%20SELLING%20PRODUCT%207304429236-images-${i}.jpg`,
+      fileName: `OM-Online-Mart-HOT-SELLING-Sheet-${i}.jpg`
+    });
+  }
+
+  // State
+  const BATCH_SIZE = 20;
+  let catalogRenderedCount = 0;
+  let filteredCatalog = [...CATALOG_ITEMS];
+  let currentLightboxIndex = 0;
+  let activeOpenDropdown = null;
+
+  // Drawer DOM Elements
+  const catalogDrawerOverlay = document.getElementById('catalog-drawer-overlay');
+  const catalogDrawer = document.getElementById('catalog-drawer');
+  const btnCloseDrawer = document.getElementById('btn-close-drawer');
+  const btnExpandDrawer = document.getElementById('btn-expand-drawer');
+  const drawerExpandIcon = document.getElementById('drawer-expand-icon');
+  const drawerDragHandle = document.getElementById('drawer-drag-handle');
+  const catalogGrid = document.getElementById('catalog-grid');
+  const catalogScrollSentinel = document.getElementById('catalog-scroll-sentinel');
+  const catalogLoadingIndicator = document.getElementById('catalog-loading-indicator');
+  const catalogEmptyState = document.getElementById('catalog-empty-state');
+  const catalogSearchInput = document.getElementById('catalog-sheet-search');
+  const btnClearSearch = document.getElementById('btn-clear-search');
+  const btnResetSearch = document.getElementById('btn-reset-search');
+  const catalogTotalBadge = document.getElementById('catalog-total-badge');
+  const drawerDriveLink = document.getElementById('drawer-drive-link');
+
+  // Lightbox DOM Elements
+  const catalogLightbox = document.getElementById('catalog-lightbox');
+  const lightboxBackdrop = document.getElementById('lightbox-backdrop');
+  const lightboxCurrentImg = document.getElementById('lightbox-current-img');
+  const lightboxCounterPill = document.getElementById('lightbox-counter-pill');
+  const lightboxSheetTitle = document.getElementById('lightbox-sheet-title');
+  const lightboxSpinner = document.getElementById('lightbox-spinner');
+  const btnLightboxPrev = document.getElementById('btn-lightbox-prev');
+  const btnLightboxNext = document.getElementById('btn-lightbox-next');
+  const btnLightboxClose = document.getElementById('btn-lightbox-close');
+  const btnLightboxDownload = document.getElementById('btn-lightbox-download');
+  const lightboxStage = document.getElementById('lightbox-stage');
+
+  if (drawerDriveLink && APP_CONFIG.CATALOG_DRIVE_URL) {
+    drawerDriveLink.href = APP_CONFIG.CATALOG_DRIVE_URL;
+  }
+
+  // Open Drawer Function
+  function openCatalogDrawer() {
+    if (!catalogDrawerOverlay) return;
+    catalogDrawerOverlay.classList.add('active');
+    catalogDrawerOverlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+
+    // Initial batch render if empty
+    if (catalogRenderedCount === 0) {
+      renderNextBatch();
+    }
+  }
+
+  // Close Drawer Function
+  function closeCatalogDrawer() {
+    if (!catalogDrawerOverlay) return;
+    closeAllCardDropdowns();
+    catalogDrawerOverlay.classList.remove('active');
+    catalogDrawerOverlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  // Toggle Fullscreen Drawer Mode
+  function toggleDrawerFullscreen() {
+    if (!catalogDrawer) return;
+    catalogDrawer.classList.toggle('is-fullscreen');
+    const isFull = catalogDrawer.classList.contains('is-fullscreen');
+    if (drawerExpandIcon) {
+      drawerExpandIcon.className = isFull ? 'fa-solid fa-compress' : 'fa-solid fa-expand';
+    }
+  }
+
+  // Open Drawer on "Product Catalog" button click
+  if (headerCatalogBtn) {
+    headerCatalogBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openCatalogDrawer();
+    });
+  }
+
+  // Open Drawer on Header Product Carousel click
+  const headerProductCarousel = document.getElementById('header-product-carousel');
+  if (headerProductCarousel) {
+    headerProductCarousel.addEventListener('click', () => {
+      openCatalogDrawer();
+    });
+  }
+
+  // =========================================================================
+  // 🎠 DYNAMIC HEADER PRODUCT CAROUSEL (LOOP WITH ALTERNATING TILTS)
+  // =========================================================================
+  const CAROUSEL_PRODUCT_FILES = [
+    'page_062_product_13.jpg.jpeg',
+    'page_064_product_11.jpg.jpeg',
+    'page_072_product_03.jpg.jpeg',
+    'page_079_product_01.jpg.jpeg',
+    'page_082_product_06.jpg.jpeg',
+    'page_086_product_05.jpg.jpeg',
+    'page_087_product_05.jpg.jpeg',
+    'page_087_product_11.jpg.jpeg',
+    'page_099_product_03.jpg.jpeg',
+    'page_099_product_07.jpg.jpeg'
+  ];
+
+  const headerCarouselTrack = document.getElementById('header-carousel-track');
+  if (headerCarouselTrack) {
+    // Quadruple items (40 cards) so half-track is ~1500px+, guaranteeing zero breaks or gaps on any screen size
+    const loopedItems = [
+      ...CAROUSEL_PRODUCT_FILES,
+      ...CAROUSEL_PRODUCT_FILES,
+      ...CAROUSEL_PRODUCT_FILES,
+      ...CAROUSEL_PRODUCT_FILES
+    ];
+    headerCarouselTrack.innerHTML = loopedItems.map((fileName, idx) => {
+      const tiltClass = idx % 2 === 0 ? 'tilt-left' : 'tilt-right';
+      return `
+        <div class="carousel-card ${tiltClass}" title="Hot Selling Product • Tap to view catalog">
+          <img src="assets/product-carousel/${fileName}" alt="Product" loading="lazy" />
+        </div>
+      `;
+    }).join('');
+  }
+
+  if (btnCloseDrawer) btnCloseDrawer.addEventListener('click', closeCatalogDrawer);
+  if (btnExpandDrawer) btnExpandDrawer.addEventListener('click', toggleDrawerFullscreen);
+  if (drawerDragHandle) drawerDragHandle.addEventListener('click', toggleDrawerFullscreen);
+
+  if (catalogDrawerOverlay) {
+    catalogDrawerOverlay.addEventListener('click', (e) => {
+      if (e.target === catalogDrawerOverlay) {
+        closeCatalogDrawer();
+      }
+    });
+  }
+
+  // Close all card 3-dot dropdowns
+  function closeAllCardDropdowns() {
+    if (activeOpenDropdown) {
+      activeOpenDropdown.classList.remove('show');
+      const prevBtn = activeOpenDropdown.parentElement.querySelector('.card-menu-btn');
+      if (prevBtn) prevBtn.classList.remove('active');
+      activeOpenDropdown = null;
+    }
+  }
+
+  // Close dropdown on outside click
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.card-menu-btn') && !e.target.closest('.card-dropdown-menu')) {
+      closeAllCardDropdowns();
+    }
+  });
+
+  // Render Next Batch (20 items at a time)
+  function renderNextBatch() {
+    if (catalogRenderedCount >= filteredCatalog.length) {
+      if (catalogLoadingIndicator) catalogLoadingIndicator.style.display = 'none';
+      return;
+    }
+
+    const nextBatch = filteredCatalog.slice(catalogRenderedCount, catalogRenderedCount + BATCH_SIZE);
+    const fragment = document.createDocumentFragment();
+
+    nextBatch.forEach((item, indexWithinBatch) => {
+      const globalIndex = catalogRenderedCount + indexWithinBatch;
+      const card = document.createElement('div');
+      card.className = 'catalog-card';
+      card.dataset.index = globalIndex;
+
+      card.innerHTML = `
+        <div class="catalog-card-header">
+          <div class="card-title-col">
+            <span class="card-type-icon" title="Product Sheet">
+              <i class="fa-solid fa-image"></i>
+            </span>
+            <span class="card-title-text" title="${item.title}">${item.shortTitle}</span>
+          </div>
+          <button type="button" class="card-menu-btn" aria-label="Sheet options" title="Options">
+            <i class="fa-solid fa-ellipsis-vertical"></i>
+          </button>
+          <div class="card-dropdown-menu" role="menu">
+            <button type="button" class="dropdown-item btn-menu-expand" role="menuitem">
+              <i class="fa-solid fa-expand"></i>
+              <span data-i18n="expand_view">Expand View</span>
+            </button>
+            <button type="button" class="dropdown-item btn-menu-download" role="menuitem">
+              <i class="fa-solid fa-download"></i>
+              <span data-i18n="download_hd">Download HD</span>
+            </button>
+          </div>
+        </div>
+        <div class="catalog-card-image-wrap" title="Tap to expand ${item.title}">
+          <img src="${item.thumbUrl}" 
+               alt="${item.title}" 
+               loading="lazy"
+               decoding="async" />
+          <div class="card-hover-overlay">
+            <span><i class="fa-solid fa-magnifying-glass-plus"></i> View #${item.id}</span>
+          </div>
+        </div>
+      `;
+
+      // 3-Dots Menu Button Toggle
+      const menuBtn = card.querySelector('.card-menu-btn');
+      const dropdownMenu = card.querySelector('.card-dropdown-menu');
+      const btnMenuExpand = card.querySelector('.btn-menu-expand');
+      const btnMenuDownload = card.querySelector('.btn-menu-download');
+      const imageWrap = card.querySelector('.catalog-card-image-wrap');
+
+      menuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = dropdownMenu.classList.contains('show');
+        closeAllCardDropdowns();
+        if (!isOpen) {
+          dropdownMenu.classList.add('show');
+          menuBtn.classList.add('active');
+          activeOpenDropdown = dropdownMenu;
+        }
+      });
+
+      // Expand Option from 3-dot dropdown
+      btnMenuExpand.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeAllCardDropdowns();
+        openLightbox(globalIndex);
+      });
+
+      // Download HD Option from 3-dot dropdown
+      btnMenuDownload.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeAllCardDropdowns();
+        downloadSheet(item);
+      });
+
+      // Clicking the card image directly opens Lightbox
+      imageWrap.addEventListener('click', () => {
+        closeAllCardDropdowns();
+        openLightbox(globalIndex);
+      });
+
+      fragment.appendChild(card);
+    });
+
+    catalogGrid.appendChild(fragment);
+    catalogRenderedCount += nextBatch.length;
+
+    // Apply translations to dynamic batch
+    applyDynamicTranslations(catalogGrid);
+
+    if (catalogRenderedCount >= filteredCatalog.length) {
+      if (catalogLoadingIndicator) catalogLoadingIndicator.style.display = 'none';
+    }
+  }
+
+  // Infinite Scroll Observer
+  let catalogObserver = null;
+  if ('IntersectionObserver' in window && catalogScrollSentinel) {
+    catalogObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        if (catalogRenderedCount < filteredCatalog.length) {
+          if (catalogLoadingIndicator) catalogLoadingIndicator.style.display = 'flex';
+          renderNextBatch();
+        }
+      }
+    }, {
+      root: document.getElementById('catalog-drawer-scroll'),
+      rootMargin: '250px',
+      threshold: 0.1
+    });
+
+    catalogObserver.observe(catalogScrollSentinel);
+  }
+
+  // Search / Filter sheets by sheet number or keyword
+  if (catalogSearchInput) {
+    catalogSearchInput.addEventListener('input', (e) => {
+      const term = e.target.value.trim().toLowerCase();
+      if (btnClearSearch) {
+        btnClearSearch.style.display = term ? 'block' : 'none';
+      }
+
+      if (!term) {
+        filteredCatalog = [...CATALOG_ITEMS];
+      } else {
+        filteredCatalog = CATALOG_ITEMS.filter(item => 
+          item.id.toString() === term ||
+          item.id.toString().includes(term) ||
+          item.title.toLowerCase().includes(term)
+        );
+      }
+
+      catalogGrid.innerHTML = '';
+      catalogRenderedCount = 0;
+      closeAllCardDropdowns();
+
+      if (filteredCatalog.length === 0) {
+        if (catalogEmptyState) catalogEmptyState.style.display = 'block';
+        if (catalogTotalBadge) catalogTotalBadge.textContent = '0 Sheets';
+      } else {
+        if (catalogEmptyState) catalogEmptyState.style.display = 'none';
+        if (catalogTotalBadge) catalogTotalBadge.textContent = `${filteredCatalog.length} Sheets`;
+        renderNextBatch();
+      }
+    });
+  }
+
+  if (btnClearSearch) {
+    btnClearSearch.addEventListener('click', () => {
+      catalogSearchInput.value = '';
+      btnClearSearch.style.display = 'none';
+      catalogSearchInput.dispatchEvent(new Event('input'));
+      catalogSearchInput.focus();
+    });
+  }
+
+  if (btnResetSearch) {
+    btnResetSearch.addEventListener('click', () => {
+      if (catalogSearchInput) {
+        catalogSearchInput.value = '';
+        if (btnClearSearch) btnClearSearch.style.display = 'none';
+        catalogSearchInput.dispatchEvent(new Event('input'));
+      }
+    });
+  }
+
+  // =========================================================================
+  // LIGHTBOX EXPANDED VIEWER
+  // =========================================================================
+  function openLightbox(index) {
+    if (!catalogLightbox || !filteredCatalog[index]) return;
+    currentLightboxIndex = index;
+    updateLightboxContent();
+    catalogLightbox.classList.add('active');
+    catalogLightbox.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeLightbox() {
+    if (!catalogLightbox) return;
+    catalogLightbox.classList.remove('active');
+    catalogLightbox.setAttribute('aria-hidden', 'true');
+  }
+
+  function updateLightboxContent() {
+    const item = filteredCatalog[currentLightboxIndex];
+    if (!item) return;
+
+    if (lightboxCounterPill) {
+      lightboxCounterPill.textContent = `#${item.id}`;
+    }
+    if (lightboxSheetTitle) {
+      lightboxSheetTitle.textContent = item.title;
+    }
+
+    if (lightboxSpinner) lightboxSpinner.classList.add('show');
+    if (lightboxCurrentImg) {
+      lightboxCurrentImg.style.opacity = '0.35';
+
+      const tempImg = new Image();
+      tempImg.src = item.fullUrl;
+      tempImg.onload = () => {
+        lightboxCurrentImg.src = item.fullUrl;
+        lightboxCurrentImg.alt = item.title;
+        lightboxCurrentImg.style.opacity = '1';
+        if (lightboxSpinner) lightboxSpinner.classList.remove('show');
+      };
+      tempImg.onerror = () => {
+        lightboxCurrentImg.src = item.downloadUrl;
+        lightboxCurrentImg.style.opacity = '1';
+        if (lightboxSpinner) lightboxSpinner.classList.remove('show');
+      };
+    }
+
+    // Preload next and previous images
+    preloadAdjacentImages();
+  }
+
+  function preloadAdjacentImages() {
+    const nextIdx = (currentLightboxIndex + 1) % filteredCatalog.length;
+    const prevIdx = (currentLightboxIndex - 1 + filteredCatalog.length) % filteredCatalog.length;
+
+    if (filteredCatalog[nextIdx]) {
+      const imgNext = new Image();
+      imgNext.src = filteredCatalog[nextIdx].fullUrl;
+    }
+    if (filteredCatalog[prevIdx]) {
+      const imgPrev = new Image();
+      imgPrev.src = filteredCatalog[prevIdx].fullUrl;
+    }
+  }
+
+  function showNextLightbox() {
+    if (filteredCatalog.length === 0) return;
+    currentLightboxIndex = (currentLightboxIndex + 1) % filteredCatalog.length;
+    updateLightboxContent();
+  }
+
+  function showPrevLightbox() {
+    if (filteredCatalog.length === 0) return;
+    currentLightboxIndex = (currentLightboxIndex - 1 + filteredCatalog.length) % filteredCatalog.length;
+    updateLightboxContent();
+  }
+
+  if (btnLightboxNext) btnLightboxNext.addEventListener('click', showNextLightbox);
+  if (btnLightboxPrev) btnLightboxPrev.addEventListener('click', showPrevLightbox);
+  if (btnLightboxClose) btnLightboxClose.addEventListener('click', closeLightbox);
+  if (lightboxBackdrop) lightboxBackdrop.addEventListener('click', closeLightbox);
+
+  // Keyboard navigation for Lightbox and Drawer
+  document.addEventListener('keydown', (e) => {
+    if (catalogLightbox && catalogLightbox.classList.contains('active')) {
+      if (e.key === 'ArrowRight') showNextLightbox();
+      if (e.key === 'ArrowLeft') showPrevLightbox();
+      if (e.key === 'Escape') closeLightbox();
+    } else if (catalogDrawerOverlay && catalogDrawerOverlay.classList.contains('active')) {
+      if (e.key === 'Escape') closeCatalogDrawer();
+    }
+  });
+
+  // Mobile Touch Swipe Navigation for Lightbox
+  let touchStartX = 0;
+  let touchStartY = 0;
+  if (lightboxStage) {
+    lightboxStage.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    lightboxStage.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].screenX;
+      const touchEndY = e.changedTouches[0].screenY;
+      const diffX = touchEndX - touchStartX;
+      const diffY = touchEndY - touchStartY;
+
+      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
+        if (diffX < 0) showNextLightbox();
+        else showPrevLightbox();
+      }
+    }, { passive: true });
+  }
+
+  // =========================================================================
+  // ONE-CLICK DIRECT IMAGE DOWNLOAD (HIGH QUALITY)
+  // =========================================================================
+  async function downloadSheet(item) {
+    if (!item) return;
+
+    const toastMsgStart = translations[currentLang] ? (translations[currentLang].toast_downloading || 'Starting download...') : 'Starting download...';
+    showToast(toastMsgStart);
+
+    const targetUrl = item.downloadUrl || item.fullUrl;
+    const fileName = item.fileName || `OM-Online-Mart-Sheet-${item.id}.jpg`;
+
+    try {
+      const res = await fetch(targetUrl);
+      if (!res.ok) throw new Error('Network error');
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+
+      const toastSuccess = translations[currentLang] ? (translations[currentLang].toast_download_success || 'Sheet downloaded!') : 'Sheet downloaded!';
+      showToast(toastSuccess);
+    } catch (err) {
+      // Direct anchor link fallback
+      const fallbackLink = document.createElement('a');
+      fallbackLink.href = targetUrl;
+      fallbackLink.download = fileName;
+      fallbackLink.target = '_blank';
+      fallbackLink.rel = 'noopener noreferrer';
+      document.body.appendChild(fallbackLink);
+      fallbackLink.click();
+      document.body.removeChild(fallbackLink);
+    }
+  }
+
+  // Lightbox Header Download Button
+  if (btnLightboxDownload) {
+    btnLightboxDownload.addEventListener('click', () => {
+      const item = filteredCatalog[currentLightboxIndex];
+      if (item) downloadSheet(item);
+    });
+  }
+
+  // Helper to reapply translations to dynamically rendered batch
+  function applyDynamicTranslations(container) {
+    if (!container || !translations[currentLang]) return;
+    container.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (translations[currentLang][key]) {
+        el.textContent = translations[currentLang][key];
+      }
+    });
+  }
 });
