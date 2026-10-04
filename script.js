@@ -859,7 +859,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!item) return;
 
     if (lightboxCounterPill) {
-      lightboxCounterPill.textContent = `${currentLightboxIndex + 1} / ${filteredCatalog.length}`;
+      lightboxCounterPill.textContent = `#${item.id}`;
     }
     if (lightboxSheetTitle) {
       lightboxSheetTitle.textContent = item.title;
