@@ -636,6 +636,49 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Open Drawer on Header Product Carousel click
+  const headerProductCarousel = document.getElementById('header-product-carousel');
+  if (headerProductCarousel) {
+    headerProductCarousel.addEventListener('click', () => {
+      openCatalogDrawer();
+    });
+  }
+
+  // =========================================================================
+  // 🎠 DYNAMIC HEADER PRODUCT CAROUSEL (LOOP WITH ALTERNATING TILTS)
+  // =========================================================================
+  const CAROUSEL_PRODUCT_FILES = [
+    'page_062_product_13.jpg.jpeg',
+    'page_064_product_11.jpg.jpeg',
+    'page_072_product_03.jpg.jpeg',
+    'page_079_product_01.jpg.jpeg',
+    'page_082_product_06.jpg.jpeg',
+    'page_086_product_05.jpg.jpeg',
+    'page_087_product_05.jpg.jpeg',
+    'page_087_product_11.jpg.jpeg',
+    'page_099_product_03.jpg.jpeg',
+    'page_099_product_07.jpg.jpeg'
+  ];
+
+  const headerCarouselTrack = document.getElementById('header-carousel-track');
+  if (headerCarouselTrack) {
+    // Quadruple items (40 cards) so half-track is ~1500px+, guaranteeing zero breaks or gaps on any screen size
+    const loopedItems = [
+      ...CAROUSEL_PRODUCT_FILES,
+      ...CAROUSEL_PRODUCT_FILES,
+      ...CAROUSEL_PRODUCT_FILES,
+      ...CAROUSEL_PRODUCT_FILES
+    ];
+    headerCarouselTrack.innerHTML = loopedItems.map((fileName, idx) => {
+      const tiltClass = idx % 2 === 0 ? 'tilt-left' : 'tilt-right';
+      return `
+        <div class="carousel-card ${tiltClass}" title="Hot Selling Product • Tap to view catalog">
+          <img src="assets/product-carousel/${fileName}" alt="Product" loading="lazy" />
+        </div>
+      `;
+    }).join('');
+  }
+
   if (btnCloseDrawer) btnCloseDrawer.addEventListener('click', closeCatalogDrawer);
   if (btnExpandDrawer) btnExpandDrawer.addEventListener('click', toggleDrawerFullscreen);
   if (drawerDragHandle) drawerDragHandle.addEventListener('click', toggleDrawerFullscreen);

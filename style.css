@@ -716,13 +716,114 @@ html[lang="en"] .cta-title {
   box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.2);
 }
 
+/* ==========================================================================
+   HEADER PRODUCT CAROUSEL (CONTINUOUS MOVING SEAMLESS MARQUEE)
+   ========================================================================== */
+.header-product-carousel-wrap {
+  position: relative;
+  width: calc(100% + 2rem);
+  margin-left: -1rem;
+  margin-right: -1rem;
+  margin-top: 0.85rem;
+  margin-bottom: 0;
+  padding: 0.5rem 0;
+  overflow: hidden;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 5%, black 95%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, black 5%, black 95%, transparent 100%);
+  cursor: pointer;
+  z-index: 2;
+}
+
+.carousel-track {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: max-content;
+  animation: continuousMarquee 45s linear infinite;
+  will-change: transform;
+  padding: 0.35rem 0;
+}
+
+.header-product-carousel-wrap:hover .carousel-track {
+  animation-play-state: paused;
+}
+
+.carousel-card {
+  position: relative;
+  flex: 0 0 62px;
+  width: 62px;
+  height: 56px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  transform-origin: center center;
+}
+
+/* Alternating Tilts */
+.carousel-card.tilt-left {
+  transform: rotate(-3deg);
+}
+
+.carousel-card.tilt-right {
+  transform: rotate(3deg);
+}
+
+.carousel-card:hover {
+  transform: rotate(0deg) translateY(-4px) scale(1.08) !important;
+  border-color: #ffffff;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+.carousel-card img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+@keyframes continuousMarquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@media (min-width: 640px) {
+  .header-product-carousel-wrap {
+    margin-top: 1rem;
+    padding: 0.75rem 0;
+  }
+  .carousel-card {
+    flex: 0 0 74px;
+    width: 74px;
+    height: 64px;
+    border-radius: 12px;
+    padding: 4px;
+  }
+}
+
 /* Header Bottom Features / Highlights Bar */
 .header-bottom-bar {
-  margin: 1.25rem -1rem 0;
+  margin: 0 -1rem 0;
   background: rgba(0, 0, 0, 0.28);
   backdrop-filter: blur(0.5rem);
   -webkit-backdrop-filter: blur(0.5rem);
-  border-top: 0.0625rem solid rgba(255, 255, 255, 0.12);
+  border-top: none;
   display: flex;
   align-items: center;
   justify-content: space-around;
