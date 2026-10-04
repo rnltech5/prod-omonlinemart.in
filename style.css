@@ -1823,3 +1823,782 @@ a.info-val:hover {
     display: none;
   }
 }
+
+/* ==========================================================================
+   PRODUCT CATALOG DRAWER & FULLSCREEN LIGHTBOX VIEWER
+   ========================================================================== */
+
+/* Drawer Overlay (Backdrop) */
+.catalog-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 15, 29, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.32s;
+}
+
+.catalog-drawer-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Drawer Container */
+.catalog-drawer {
+  background: #0f1218;
+  color: #f8fafc;
+  width: 100%;
+  max-width: 1100px;
+  height: 88vh;
+  max-height: 88vh;
+  border-radius: 24px 24px 0 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: none;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(100%);
+  transition: transform 0.36s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s ease, border-radius 0.3s ease;
+  box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  position: relative;
+}
+
+.catalog-drawer-overlay.active .catalog-drawer {
+  transform: translateY(0);
+}
+
+/* Fullscreen Mode for Drawer */
+.catalog-drawer.is-fullscreen {
+  height: 100vh !important;
+  max-height: 100vh !important;
+  max-width: 100vw !important;
+  width: 100vw !important;
+  border-radius: 0 !important;
+  border: none !important;
+}
+
+/* Drawer Header */
+.catalog-drawer-header {
+  background: #141720;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.625rem 1rem 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  position: relative;
+  z-index: 10;
+}
+
+/* Drag Handle / Pill */
+.drawer-drag-pill {
+  width: 44px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 99px;
+  margin: 0 auto;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.drawer-drag-pill:hover {
+  background: rgba(255, 255, 255, 0.5);
+  transform: scaleX(1.15);
+}
+
+/* Navigation Row */
+.drawer-nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Brand Column on Left */
+.drawer-brand-col {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.drawer-brand-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+}
+
+.drawer-title-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.drawer-title-with-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.drawer-title-with-badge h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.drawer-count-badge {
+  background: rgba(0, 86, 210, 0.35);
+  border: 1px solid rgba(43, 127, 255, 0.4);
+  color: #93c5fd;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.125rem 0.5rem;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+
+.drawer-subtext {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin: 0.125rem 0 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Actions Column on Right */
+.drawer-actions-col {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Drive Help Button */
+.drawer-drive-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #e2e8f0;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.drawer-drive-btn i.fa-google-drive {
+  color: #34a853;
+  font-size: 0.95rem;
+}
+
+.drawer-drive-btn .drive-ext-icon {
+  font-size: 0.65rem;
+  color: #94a3b8;
+}
+
+.drawer-drive-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Control Buttons (Expand / Close) */
+.drawer-control-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #cbd5e1;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.drawer-control-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+.btn-close-drawer:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+/* Search Wrap */
+.drawer-search-wrap {
+  width: 100%;
+}
+
+.drawer-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #1c202a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 0.45rem 0.85rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.drawer-search-box:focus-within {
+  border-color: #2b7fff;
+  box-shadow: 0 0 0 3px rgba(43, 127, 255, 0.2);
+}
+
+.drawer-search-box .search-icon {
+  color: #64748b;
+  font-size: 0.85rem;
+  margin-right: 0.5rem;
+}
+
+.drawer-search-box input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #f1f5f9;
+  font-size: 0.85rem;
+  font-family: inherit;
+  width: 100%;
+}
+
+.drawer-search-box input::placeholder {
+  color: #64748b;
+}
+
+.search-clear-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0.25rem;
+  font-size: 0.85rem;
+}
+
+/* Drawer Scrollable Body */
+.catalog-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  background: #0d0f14;
+}
+
+/* Custom Scrollbar for Drawer */
+.catalog-drawer-body::-webkit-scrollbar {
+  width: 6px;
+}
+.catalog-drawer-body::-webkit-scrollbar-track {
+  background: #0d0f14;
+}
+.catalog-drawer-body::-webkit-scrollbar-thumb {
+  background: #262c3b;
+  border-radius: 99px;
+}
+.catalog-drawer-body::-webkit-scrollbar-thumb:hover {
+  background: #3b4459;
+}
+
+/* Grid Layout matching screenshot */
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+@media (min-width: 540px) {
+  .catalog-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.875rem;
+  }
+}
+
+@media (min-width: 800px) {
+  .catalog-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 1050px) {
+  .catalog-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+  }
+}
+
+/* Product Card - Dark Aesthetic matching screenshot */
+.catalog-card {
+  position: relative;
+  background: #17191f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.catalog-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* Card Header Bar (Icon + HOT SELLING... + 3 Dots) */
+.catalog-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 0.6rem;
+  background: #17191f;
+  border-radius: 12px 12px 0 0;
+  position: relative;
+  z-index: 5;
+}
+
+.card-title-col {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+/* Red Icon Badge */
+.card-type-icon {
+  width: 20px;
+  height: 20px;
+  background: #e53935;
+  color: #ffffff;
+  border-radius: 4px;
+  display: grid;
+  place-items: center;
+  font-size: 0.65rem;
+  flex-shrink: 0;
+}
+
+.card-title-text {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 3-Dots Button */
+.card-menu-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  width: 26px;
+  height: 26px;
+  border-radius: 4px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.15s, color 0.15s;
+}
+
+.card-menu-btn:hover,
+.card-menu-btn.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+/* 3-Dots Dropdown Menu */
+.card-dropdown-menu {
+  position: absolute;
+  top: calc(100% - 2px);
+  right: 0.5rem;
+  background: #222631;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 0.3rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  z-index: 50;
+  min-width: 140px;
+  display: none;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.card-dropdown-menu.show {
+  display: flex;
+  animation: fadeInDown 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  border: none;
+  color: #e2e8f0;
+  font-size: 0.78rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+
+.dropdown-item i {
+  font-size: 0.82rem;
+  width: 16px;
+  color: #94a3b8;
+}
+
+.dropdown-item:hover {
+  background: rgba(43, 127, 255, 0.15);
+  color: #ffffff;
+}
+
+.dropdown-item:hover i {
+  color: #60a5fa;
+}
+
+/* Card Image Body */
+.catalog-card-image-wrap {
+  position: relative;
+  background: #ffffff;
+  border-radius: 0 0 11px 11px;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.catalog-card-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.25s ease;
+}
+
+.catalog-card:hover .catalog-card-image-wrap img {
+  transform: scale(1.03);
+}
+
+/* Hover Quick Indicator */
+.card-hover-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 15, 40, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.catalog-card-image-wrap:hover .card-hover-overlay {
+  opacity: 1;
+}
+
+.card-hover-overlay span {
+  background: rgba(15, 23, 42, 0.85);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: 99px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* Sentinel & Infinite Loading */
+.catalog-sentinel {
+  width: 100%;
+  height: 30px;
+}
+
+.catalog-loading-indicator {
+  text-align: center;
+  padding: 1.25rem 0;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.catalog-loading-indicator i {
+  color: #3b82f6;
+}
+
+/* Empty State */
+.catalog-empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #94a3b8;
+}
+
+.catalog-empty-state .empty-icon {
+  font-size: 2.5rem;
+  color: #475569;
+  margin-bottom: 0.75rem;
+}
+
+.btn-reset-search {
+  margin-top: 1rem;
+  background: #0056d2;
+  border: none;
+  color: #fff;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   FULLSCREEN LIGHTBOX VIEWER
+   ========================================================================== */
+.catalog-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.26s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.26s;
+}
+
+.catalog-lightbox.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 9, 14, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.lightbox-content-wrap {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Lightbox Top Bar */
+.lightbox-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1.25rem;
+  background: rgba(14, 18, 27, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lightbox-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.lightbox-counter-pill {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #f1f5f9;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: 99px;
+}
+
+.lightbox-sheet-title {
+  color: #e2e8f0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.lightbox-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.lightbox-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  padding: 0.45rem 0.95rem;
+  border-radius: 99px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.lightbox-action-btn:hover {
+  background: rgba(255, 255, 255, 0.24);
+  transform: translateY(-1px);
+}
+
+.btn-lightbox-download {
+  background: #0056d2;
+  border-color: #2b7fff;
+}
+
+.btn-lightbox-download:hover {
+  background: #0043a8;
+}
+
+.btn-lightbox-close {
+  padding: 0.45rem 0.65rem;
+  border-radius: 50%;
+  font-size: 1rem;
+}
+
+.btn-lightbox-close:hover {
+  background: rgba(239, 68, 68, 0.35);
+  border-color: rgba(239, 68, 68, 0.6);
+}
+
+/* Lightbox Stage */
+.lightbox-stage {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0.5rem;
+}
+
+.lightbox-image-stage {
+  position: relative;
+  max-width: 94vw;
+  max-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-image-stage img {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.8);
+  transition: opacity 0.2s ease;
+  user-select: none;
+}
+
+.lightbox-spinner {
+  position: absolute;
+  color: #3b82f6;
+  font-size: 2.2rem;
+  display: none;
+  z-index: 10;
+}
+
+.lightbox-spinner.show {
+  display: block;
+}
+
+/* Navigation Chevrons */
+.lightbox-nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(20, 24, 34, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 1.15rem;
+  transition: all 0.2s ease;
+  z-index: 20;
+}
+
+.lightbox-nav-arrow:hover {
+  background: rgba(43, 127, 255, 0.5);
+  border-color: #60a5fa;
+  transform: translateY(-50%) scale(1.08);
+}
+
+.nav-prev { left: 1rem; }
+.nav-next { right: 1rem; }
+
+@media (max-width: 600px) {
+  .lightbox-nav-arrow {
+    width: 36px;
+    height: 36px;
+    font-size: 0.95rem;
+  }
+  .nav-prev { left: 0.5rem; }
+  .nav-next { right: 0.5rem; }
+}
+
+/* Footer Hint Bar */
+.lightbox-footer-bar {
+  text-align: center;
+  padding: 0.625rem 1rem;
+  background: rgba(14, 18, 27, 0.8);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lightbox-hint {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}

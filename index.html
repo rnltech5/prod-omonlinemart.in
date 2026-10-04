@@ -528,6 +528,135 @@
     </div>
   </div>
 
+  <!-- ========================================== -->
+  <!-- 📦 PRODUCT CATALOG DRAWER (BOTTOM EXPANDABLE) -->
+  <!-- ========================================== -->
+  <div class="catalog-drawer-overlay" id="catalog-drawer-overlay" aria-hidden="true">
+    <div class="catalog-drawer" id="catalog-drawer" role="dialog" aria-modal="true" aria-labelledby="catalog-drawer-title">
+      
+      <!-- Drawer Top Bar -->
+      <div class="catalog-drawer-header">
+        <div class="drawer-drag-pill" id="drawer-drag-handle" title="Drag or tap to toggle full page"></div>
+        
+        <div class="drawer-nav-row">
+          <!-- Left: Brand Logo & Title -->
+          <div class="drawer-brand-col">
+            <img src="assets/logo-omonlinemart.jpg" alt="OM Online Mart" class="drawer-brand-logo" />
+            <div class="drawer-title-group">
+              <div class="drawer-title-with-badge">
+                <h3 id="catalog-drawer-title" data-i18n="catalog_btn">પ્રોડક્ટ કેટલોગ</h3>
+                <span class="drawer-count-badge" id="catalog-total-badge">83 Sheets</span>
+              </div>
+              <p class="drawer-subtext" data-i18n="drawer_subtext">Hot Selling Products • Meesho Dropshipping</p>
+            </div>
+          </div>
+
+          <!-- Right: Drive Help Link + Expand/Collapse + Close -->
+          <div class="drawer-actions-col">
+            <a href="https://drive.google.com/drive/folders/1MZryYIel2VUDi2lZCdPLwBD6AIZlhYpZ?usp=sharing" target="_blank" rel="noopener noreferrer" class="drawer-drive-btn" id="drawer-drive-link" title="Open Google Drive Catalog">
+              <i class="fa-brands fa-google-drive"></i>
+              <span class="drive-btn-text" data-i18n="problem_loading">Problem to load?</span>
+              <i class="fa-solid fa-arrow-up-right-from-square drive-ext-icon"></i>
+            </a>
+
+            <button type="button" class="drawer-control-btn btn-expand-drawer" id="btn-expand-drawer" aria-label="Toggle Fullscreen" title="Expand Full Page">
+              <i class="fa-solid fa-expand" id="drawer-expand-icon"></i>
+            </button>
+
+            <button type="button" class="drawer-control-btn btn-close-drawer" id="btn-close-drawer" aria-label="Close Catalog" title="Close">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter / Search Bar -->
+        <div class="drawer-search-wrap">
+          <div class="drawer-search-box">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="catalog-sheet-search" placeholder="શીટ નંબર શોધો (દા.ત. 15, 80)..." data-i18n-ph="search_placeholder" autocomplete="off" />
+            <button type="button" class="search-clear-btn" id="btn-clear-search" aria-label="Clear search" style="display: none;">
+              <i class="fa-solid fa-circle-xmark"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drawer Scrollable Content -->
+      <div class="catalog-drawer-body" id="catalog-drawer-scroll">
+        <div class="catalog-grid" id="catalog-grid">
+          <!-- Cards dynamically rendered here -->
+        </div>
+
+        <!-- Intersection Sentinel for Infinite Scroll -->
+        <div class="catalog-sentinel" id="catalog-scroll-sentinel"></div>
+
+        <!-- Loading indicator / fallback button -->
+        <div class="catalog-loading-indicator" id="catalog-loading-indicator" style="display: none;">
+          <i class="fa-solid fa-circle-notch fa-spin"></i>
+          <span>વધુ શીટ્સ લોડ થઈ રહી છે...</span>
+        </div>
+
+        <!-- Empty State -->
+        <div class="catalog-empty-state" id="catalog-empty-state" style="display: none;">
+          <i class="fa-solid fa-box-open empty-icon"></i>
+          <p>કોઈ પરિણામ મળ્યું નથી (No sheets found)</p>
+          <button type="button" class="btn-reset-search" id="btn-reset-search">બધી શીટ્સ જુઓ</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 🔍 FULLSCREEN LIGHTBOX / EXPANDED VIEWER   -->
+  <!-- ========================================== -->
+  <div class="catalog-lightbox" id="catalog-lightbox" aria-hidden="true">
+    <div class="lightbox-overlay" id="lightbox-backdrop"></div>
+    
+    <div class="lightbox-content-wrap">
+      <!-- Lightbox Header / Controls -->
+      <div class="lightbox-top-bar">
+        <div class="lightbox-header-left">
+          <span class="lightbox-counter-pill" id="lightbox-counter-pill">1 / 83</span>
+          <span class="lightbox-sheet-title" id="lightbox-sheet-title">HOT SELLING #0</span>
+        </div>
+
+        <div class="lightbox-header-actions">
+          <button type="button" class="lightbox-action-btn btn-lightbox-download" id="btn-lightbox-download" title="Download High Quality" aria-label="Download">
+            <i class="fa-solid fa-download"></i>
+            <span class="download-btn-label" data-i18n="download_btn">Download</span>
+          </button>
+          <button type="button" class="lightbox-action-btn btn-lightbox-close" id="btn-lightbox-close" title="Close Fullscreen" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Stage -->
+      <div class="lightbox-stage" id="lightbox-stage">
+        <button type="button" class="lightbox-nav-arrow nav-prev" id="btn-lightbox-prev" aria-label="Previous sheet" title="Previous (Left Arrow)">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <div class="lightbox-image-stage">
+          <div class="lightbox-spinner" id="lightbox-spinner">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+          </div>
+          <img id="lightbox-current-img" src="" alt="Product Sheet" />
+        </div>
+
+        <button type="button" class="lightbox-nav-arrow nav-next" id="btn-lightbox-next" aria-label="Next sheet" title="Next (Right Arrow)">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <!-- Bottom Hint Bar -->
+      <div class="lightbox-footer-bar">
+        <span class="lightbox-hint"><i class="fa-solid fa-arrows-left-right"></i> Swipe or use arrow keys to navigate</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification -->
   <div class="toast-notification" id="toast" role="alert" aria-live="polite">
     <i class="fa-solid fa-circle-check toast-icon" id="toast-icon"></i>
