@@ -596,8 +596,8 @@ document.addEventListener('DOMContentLoaded', () => {
     drawerDriveLink.href = APP_CONFIG.CATALOG_DRIVE_URL;
   }
 
-  // Open Drawer Function
-  function openCatalogDrawer() {
+  // Open Drawer Function with Route History
+  function openCatalogDrawer(pushHistory = true) {
     if (!catalogDrawerOverlay) return;
     catalogDrawerOverlay.classList.add('active');
     catalogDrawerOverlay.setAttribute('aria-hidden', 'false');
@@ -607,15 +607,37 @@ document.addEventListener('DOMContentLoaded', () => {
     if (catalogRenderedCount === 0) {
       renderNextBatch();
     }
+
+    if (pushHistory) {
+      if (window.location.hash !== '#catalog' && !window.location.hash.startsWith('#sheet-')) {
+        window.history.pushState({ modal: 'catalog' }, '', '#catalog');
+      }
+    }
   }
 
-  // Close Drawer Function
-  function closeCatalogDrawer() {
+  // Close Drawer Function with Route History
+  function closeCatalogDrawer(triggerHistory = true) {
     if (!catalogDrawerOverlay) return;
+
+    if (catalogLightbox && catalogLightbox.classList.contains('active')) {
+      closeLightbox(false);
+    }
+
     closeAllCardDropdowns();
     catalogDrawerOverlay.classList.remove('active');
     catalogDrawerOverlay.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+
+    if (triggerHistory) {
+      if (window.location.hash === '#catalog' || window.location.hash.startsWith('#sheet-')) {
+        if (window.history.state && (window.history.state.modal === 'catalog' || window.history.state.modal === 'lightbox')) {
+          window.history.back();
+          return;
+        }
+        const cleanUrl = window.location.pathname + window.location.search;
+        window.history.replaceState(null, '', cleanUrl);
+      }
+    }
   }
 
   // Toggle Fullscreen Drawer Mode
@@ -679,14 +701,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }).join('');
   }
 
-  if (btnCloseDrawer) btnCloseDrawer.addEventListener('click', closeCatalogDrawer);
+  if (btnCloseDrawer) btnCloseDrawer.addEventListener('click', () => closeCatalogDrawer(true));
   if (btnExpandDrawer) btnExpandDrawer.addEventListener('click', toggleDrawerFullscreen);
   if (drawerDragHandle) drawerDragHandle.addEventListener('click', toggleDrawerFullscreen);
 
   if (catalogDrawerOverlay) {
     catalogDrawerOverlay.addEventListener('click', (e) => {
       if (e.target === catalogDrawerOverlay) {
-        closeCatalogDrawer();
+        closeCatalogDrawer(true);
       }
     });
   }
@@ -881,20 +903,38 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =========================================================================
-  // LIGHTBOX EXPANDED VIEWER
+  // LIGHTBOX EXPANDED VIEWER WITH ROUTE HISTORY (#sheet-ID)
   // =========================================================================
-  function openLightbox(index) {
+  function openLightbox(index, pushHistory = true) {
     if (!catalogLightbox || !filteredCatalog[index]) return;
     currentLightboxIndex = index;
+    const item = filteredCatalog[currentLightboxIndex];
     updateLightboxContent();
     catalogLightbox.classList.add('active');
     catalogLightbox.setAttribute('aria-hidden', 'false');
+
+    if (pushHistory && item) {
+      const targetHash = `#sheet-${item.id}`;
+      if (window.location.hash !== targetHash) {
+        window.history.pushState({ modal: 'lightbox', sheetId: item.id, index: currentLightboxIndex }, '', targetHash);
+      }
+    }
   }
 
-  function closeLightbox() {
+  function closeLightbox(triggerHistory = true) {
     if (!catalogLightbox) return;
     catalogLightbox.classList.remove('active');
     catalogLightbox.setAttribute('aria-hidden', 'true');
+
+    if (triggerHistory) {
+      if (window.location.hash.startsWith('#sheet-')) {
+        if (window.history.state && window.history.state.modal === 'lightbox') {
+          window.history.back();
+          return;
+        }
+        window.history.replaceState({ modal: 'catalog' }, '', '#catalog');
+      }
+    }
   }
 
   function updateLightboxContent() {
@@ -949,29 +989,99 @@ document.addEventListener('DOMContentLoaded', () => {
     if (filteredCatalog.length === 0) return;
     currentLightboxIndex = (currentLightboxIndex + 1) % filteredCatalog.length;
     updateLightboxContent();
+    const item = filteredCatalog[currentLightboxIndex];
+    if (item) {
+      window.history.replaceState(
+        { modal: 'lightbox', sheetId: item.id, index: currentLightboxIndex },
+        '',
+        `#sheet-${item.id}`
+      );
+    }
   }
 
   function showPrevLightbox() {
     if (filteredCatalog.length === 0) return;
     currentLightboxIndex = (currentLightboxIndex - 1 + filteredCatalog.length) % filteredCatalog.length;
     updateLightboxContent();
+    const item = filteredCatalog[currentLightboxIndex];
+    if (item) {
+      window.history.replaceState(
+        { modal: 'lightbox', sheetId: item.id, index: currentLightboxIndex },
+        '',
+        `#sheet-${item.id}`
+      );
+    }
   }
 
   if (btnLightboxNext) btnLightboxNext.addEventListener('click', showNextLightbox);
   if (btnLightboxPrev) btnLightboxPrev.addEventListener('click', showPrevLightbox);
-  if (btnLightboxClose) btnLightboxClose.addEventListener('click', closeLightbox);
-  if (lightboxBackdrop) lightboxBackdrop.addEventListener('click', closeLightbox);
+  if (btnLightboxClose) btnLightboxClose.addEventListener('click', () => closeLightbox(true));
+  if (lightboxBackdrop) lightboxBackdrop.addEventListener('click', () => closeLightbox(true));
 
   // Keyboard navigation for Lightbox and Drawer
   document.addEventListener('keydown', (e) => {
     if (catalogLightbox && catalogLightbox.classList.contains('active')) {
       if (e.key === 'ArrowRight') showNextLightbox();
       if (e.key === 'ArrowLeft') showPrevLightbox();
-      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'Escape') closeLightbox(true);
     } else if (catalogDrawerOverlay && catalogDrawerOverlay.classList.contains('active')) {
-      if (e.key === 'Escape') closeCatalogDrawer();
+      if (e.key === 'Escape') closeCatalogDrawer(true);
     }
   });
+
+  // =========================================================================
+  // URL ROUTING & MOBILE BROWSER BACK BUTTON SYNC (#catalog, #sheet-ID)
+  // =========================================================================
+  function handleUrlRouting() {
+    const hash = window.location.hash;
+
+    if (hash.startsWith('#sheet-')) {
+      const sheetId = parseInt(hash.replace('#sheet-', ''), 10);
+      
+      // Ensure drawer is open first
+      if (catalogDrawerOverlay && !catalogDrawerOverlay.classList.contains('active')) {
+        openCatalogDrawer(false);
+      }
+
+      // Find sheet in catalog
+      let targetIndex = filteredCatalog.findIndex(item => item.id === sheetId);
+      if (targetIndex === -1) {
+        // If search or filter hid this item, reset search to show full list
+        filteredCatalog = [...CATALOG_ITEMS];
+        if (catalogSearchInput) catalogSearchInput.value = '';
+        if (btnClearSearch) btnClearSearch.style.display = 'none';
+        catalogGrid.innerHTML = '';
+        catalogRenderedCount = 0;
+        renderNextBatch();
+        targetIndex = filteredCatalog.findIndex(item => item.id === sheetId);
+      }
+
+      if (targetIndex !== -1) {
+        openLightbox(targetIndex, false);
+      }
+    } else if (hash === '#catalog') {
+      // Lightbox closes, drawer stays/becomes open
+      if (catalogLightbox && catalogLightbox.classList.contains('active')) {
+        closeLightbox(false);
+      }
+      if (catalogDrawerOverlay && !catalogDrawerOverlay.classList.contains('active')) {
+        openCatalogDrawer(false);
+      }
+    } else {
+      // Return to homepage: close both
+      if (catalogLightbox && catalogLightbox.classList.contains('active')) {
+        closeLightbox(false);
+      }
+      if (catalogDrawerOverlay && catalogDrawerOverlay.classList.contains('active')) {
+        closeCatalogDrawer(false);
+      }
+    }
+  }
+
+  window.addEventListener('popstate', handleUrlRouting);
+
+  // Check URL route on initial page load (enables deep links like #catalog or #sheet-5)
+  handleUrlRouting();
 
   // Mobile Touch Swipe Navigation for Lightbox
   let touchStartX = 0;
