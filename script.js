@@ -546,8 +546,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (skippedSheets.has(i)) continue;
     CATALOG_ITEMS.push({
       id: i,
-      title: `HOT SELLING PRODUCT...7304429236-${i}`,
-      shortTitle: `HOT SELLING PRODUCT...7304429236-${i}`,
+      title: `M. 7304429236`,
+      shortTitle: `#${i}`,
       thumbUrl: `https://ik.imagekit.io/86fnw06jj/tr:w-250,q-55,f-auto/7304429236/HOT%20SELLING%20PRODUCT%207304429236-images-${i}.jpg`,
       fullUrl: `https://ik.imagekit.io/86fnw06jj/tr:w-1200,q-80,f-auto/7304429236/HOT%20SELLING%20PRODUCT%207304429236-images-${i}.jpg`,
       downloadUrl: `https://ik.imagekit.io/86fnw06jj/7304429236/HOT%20SELLING%20PRODUCT%207304429236-images-${i}.jpg`,

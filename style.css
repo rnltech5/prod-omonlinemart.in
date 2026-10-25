@@ -1955,10 +1955,10 @@ a.info-val:hover {
   background: #0f1218;
   color: #f8fafc;
   width: 100%;
-  max-width: 1100px;
+  max-width: min(96vw, 1720px);
   height: 88vh;
   max-height: 88vh;
-  border-radius: 24px 24px 0 0;
+  border-radius: clamp(16px, 2vw, 24px) clamp(16px, 2vw, 24px) 0 0;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-bottom: none;
   display: flex;
@@ -1968,6 +1968,16 @@ a.info-val:hover {
   box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.45);
   overflow: hidden;
   position: relative;
+}
+
+@media (max-width: 640px) {
+  .catalog-drawer {
+    width: 100vw;
+    max-width: 100vw;
+    height: 92vh;
+    max-height: 92vh;
+    border-radius: 18px 18px 0 0;
+  }
 }
 
 .catalog-drawer-overlay.active .catalog-drawer {
@@ -2118,6 +2128,19 @@ a.info-val:hover {
   border-color: rgba(255, 255, 255, 0.3);
 }
 
+@media (max-width: 520px) {
+  .drawer-drive-btn .drive-btn-text,
+  .drawer-drive-btn .drive-ext-icon {
+    display: none;
+  }
+  .drawer-drive-btn {
+    padding: 0;
+    width: 36px;
+    height: 36px;
+    justify-content: center;
+  }
+}
+
 /* Control Buttons (Expand / Close) */
 .drawer-control-btn {
   width: 36px;
@@ -2198,10 +2221,13 @@ a.info-val:hover {
 .catalog-drawer-body {
   flex: 1;
   overflow-y: auto;
-  padding: 1rem;
+  overflow-x: hidden;
+  padding: clamp(0.5rem, 1.5vw, 1.25rem);
   -webkit-overflow-scrolling: touch;
   position: relative;
   background: #0d0f14;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Custom Scrollbar for Drawer */
@@ -2219,43 +2245,73 @@ a.info-val:hover {
   background: #3b4459;
 }
 
-/* Grid Layout matching screenshot */
+/* ==========================================================================
+   RESPONSIVE CATALOG GRID & CARDS (SCALES WITH SCREEN VW & CONTAINER)
+   ========================================================================== */
+
+/* Dynamic Card & Grid Sizing Tokens */
+:root {
+  --catalog-card-min-width: 135px;
+  --catalog-grid-gap: clamp(0.5rem, 1.2vw, 1rem);
+  --catalog-card-radius: clamp(8px, 1.2vw, 14px);
+  --catalog-card-pad-y: clamp(0.3rem, 0.8vw, 0.48rem);
+  --catalog-card-pad-x: clamp(0.35rem, 1vw, 0.65rem);
+  --catalog-card-icon-size: clamp(17px, 2vw, 22px);
+  --catalog-card-title-size: clamp(0.66rem, 1.05vw, 0.82rem);
+  --catalog-card-btn-size: clamp(22px, 2.4vw, 28px);
+}
+
+@media (min-width: 480px) {
+  :root {
+    --catalog-card-min-width: 150px;
+  }
+}
+
+@media (min-width: 720px) {
+  :root {
+    --catalog-card-min-width: 165px;
+  }
+}
+
+@media (min-width: 992px) {
+  :root {
+    --catalog-card-min-width: 180px;
+  }
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --catalog-card-min-width: 195px;
+  }
+}
+
+@media (min-width: 1600px) {
+  :root {
+    --catalog-card-min-width: 210px;
+  }
+}
+
+/* Grid Layout: Auto-fills strictly based on available width, guaranteeing NO partial/cut-off cards */
 .catalog-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--catalog-card-min-width)), 1fr));
+  gap: var(--catalog-grid-gap);
+  width: 100%;
+  box-sizing: border-box;
 }
 
-@media (min-width: 540px) {
-  .catalog-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.875rem;
-  }
-}
-
-@media (min-width: 800px) {
-  .catalog-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-  }
-}
-
-@media (min-width: 1050px) {
-  .catalog-grid {
-    grid-template-columns: repeat(5, 1fr);
-    gap: 1rem;
-  }
-}
-
-/* Product Card - Dark Aesthetic matching screenshot */
+/* Product Card - Dark Aesthetic & Responsive sizing based on screen / VW */
 .catalog-card {
   position: relative;
   background: #17191f;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
+  border-radius: var(--catalog-card-radius);
   overflow: visible;
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
@@ -2265,46 +2321,53 @@ a.info-val:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
-/* Card Header Bar (Icon + HOT SELLING... + 3 Dots) */
+/* Card Header Bar (Icon + Title + 3 Dots) */
 .catalog-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.45rem 0.6rem;
+  padding: var(--catalog-card-pad-y) var(--catalog-card-pad-x);
   background: #17191f;
-  border-radius: 12px 12px 0 0;
+  border-radius: var(--catalog-card-radius) var(--catalog-card-radius) 0 0;
   position: relative;
   z-index: 5;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  gap: 0.25rem;
 }
 
 .card-title-col {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: clamp(0.25rem, 0.6vw, 0.4rem);
   min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
 }
 
 /* Red Icon Badge */
 .card-type-icon {
-  width: 20px;
-  height: 20px;
+  width: var(--catalog-card-icon-size);
+  height: var(--catalog-card-icon-size);
   background: #e53935;
   color: #ffffff;
   border-radius: 4px;
   display: grid;
   place-items: center;
-  font-size: 0.65rem;
+  font-size: clamp(0.55rem, 0.9vw, 0.68rem);
   flex-shrink: 0;
 }
 
 .card-title-text {
-  font-size: 0.72rem;
+  font-size: var(--catalog-card-title-size);
   font-weight: 700;
   color: #f1f5f9;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
 }
 
 /* 3-Dots Button */
@@ -2312,14 +2375,15 @@ a.info-val:hover {
   background: transparent;
   border: none;
   color: #94a3b8;
-  width: 26px;
-  height: 26px;
+  width: var(--catalog-card-btn-size);
+  height: var(--catalog-card-btn-size);
   border-radius: 4px;
   display: grid;
   place-items: center;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: clamp(0.72rem, 1vw, 0.88rem);
   transition: background 0.15s, color 0.15s;
+  flex-shrink: 0;
 }
 
 .card-menu-btn:hover,
@@ -2397,13 +2461,15 @@ a.info-val:hover {
 .catalog-card-image-wrap {
   position: relative;
   background: #ffffff;
-  border-radius: 0 0 11px 11px;
+  border-radius: 0 0 calc(var(--catalog-card-radius) - 1px) calc(var(--catalog-card-radius) - 1px);
   overflow: hidden;
   aspect-ratio: 1 / 1;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .catalog-card-image-wrap img {
@@ -2437,14 +2503,15 @@ a.info-val:hover {
 .card-hover-overlay span {
   background: rgba(15, 23, 42, 0.85);
   color: #ffffff;
-  font-size: 0.72rem;
+  font-size: clamp(0.62rem, 0.95vw, 0.75rem);
   font-weight: 600;
-  padding: 0.35rem 0.75rem;
+  padding: clamp(0.25rem, 0.5vw, 0.35rem) clamp(0.5rem, 0.9vw, 0.75rem);
   border-radius: 99px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
   gap: 0.35rem;
+  white-space: nowrap;
 }
 
 /* Sentinel & Infinite Loading */
